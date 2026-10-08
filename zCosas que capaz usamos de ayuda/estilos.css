@@ -1,0 +1,84 @@
+body {
+background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+min-height: 100vh;
+justify-content: center;
+align-items: center;
+color: #333;
+padding: 20px;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+color: rgb(255, 255, 255);
+margin-bottom: 25px;
+font-size: 1.8rem;
+font-weight: 700;
+letter-spacing: 0.5px;
+text-transform: capitalize;
+}
+
+p{
+    color: wheat;
+}
+
+form {
+margin:5px;
+display: flex;
+flex-direction: column;
+gap: 13px;
+}
+
+.input-login{
+width: 90%;
+padding: 14px 16px;
+border: 2px solid #e2e8f0;
+border-radius: 10px;
+font-size: 0.95rem;
+transition: all 0.3s ease;
+outline: none;
+background-color: #f8fafc;
+}
+
+.input-crearCuenta{
+width: 90%;
+padding: 14px 16px;
+border: 2px solid #e2e8f0;
+border-radius: 10px;
+font-size: 0.95rem;
+transition: all 0.3s ease;
+outline: none;
+background-color: #f8fafc;
+}
+
+
+.btn-crearCuenta{
+width: 80%;
+padding: 14px;
+border: none;
+border-radius: 10px;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+text-decoration: none;
+display: inline-block;
+box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.btn-iniciarSesion{
+width: 30%;
+margin: auto;
+padding: 14px;
+border: none;
+border-radius: 10px;
+letter-spacing: 1px;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+text-decoration: none;
+display: inline-block;
+box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+

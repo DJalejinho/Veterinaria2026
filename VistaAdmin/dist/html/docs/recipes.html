@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Common Patterns &amp; Recetas | AdminLTE 4</title>
+
+<!--begin::Theme Init (prevents flash of incorrect theme on load, #6043)-->
+<script>
+  ;(() => {
+    "use strict"
+    const root = document.documentElement
+
+    // Applications with their own theming opt out of AdminLTE's color mode
+    // entirely, here as well as in the bundle.
+    if (root.getAttribute("data-lte-color-mode") === "off") {
+      return
+    }
+
+    const STORAGE_KEY = "lte-theme"
+    let stored = null
+    try {
+      stored = localStorage.getItem(STORAGE_KEY)
+    } catch {
+      // localStorage may be unavailable (private mode, sandboxed iframe).
+    }
+    // Mirror the precedence in color-mode.ts: the visitor's stored choice
+    // wins, then a theme this page declared itself, then the OS preference.
+    const authored = root.getAttribute("data-bs-theme")
+    let resolved = "light"
+    if (stored === "dark" || stored === "light") {
+      resolved = stored
+    } else if (authored === "dark" || authored === "light") {
+      resolved = authored
+    } else if (globalThis.matchMedia("(prefers-color-scheme: dark)").matches) {
+      resolved = "dark"
+    }
+    root.setAttribute("data-bs-theme", resolved)
+    root.style.colorScheme = resolved
+    // Flag values computed here, so the bundle does not mistake them for a
+    // theme the page declared and stop following the OS preference.
+    if (resolved !== authored) {
+      root.setAttribute("data-lte-theme-resolved", "")
+    }
+  })()
+</script>
+<!--end::Theme Init-->
+
+<!--begin::Accesibilidad Meta Tags-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<!--end::Accesibilidad Meta Tags-->
+
+<!--begin::Primary Meta Tags-->
+<meta name="title" content="Common Patterns &amp; Recetas | AdminLTE 4">
+<meta name="author" content="ColorlibHQ">
+<meta name="description" content="AdminLTE es una plantilla gratuita de panel de administración para Bootstrap 5, con casi 50 páginas de ejemplo, creada con JavaScript vanilla y diseñada teniendo en cuenta la accesibilidad.">
+<meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard, accessible admin panel">
+<!--end::Primary Meta Tags-->
+
+<!--begin::Accesibilidad Características-->
+<!-- Skip links will be dynamically added by accessibility.js -->
+<meta name="supported-color-schemes" content="light dark">
+<link rel="preload" href="../css/adminlte.css" as="style">
+<!--end::Accesibilidad Características-->
+
+<!--begin::Fonts-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" media="print" onload="this.media='all'">
+<!--end::Fonts-->
+
+<!--begin::Complemento de terceros (OverlayScrollbars)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" crossorigin="anonymous">
+<!--end::Complemento de terceros (OverlayScrollbars)-->
+
+<!--begin::Complemento de terceros (Bootstrap Icons)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+<!--end::Complemento de terceros (Bootstrap Icons)-->
+
+<!--begin::Complemento requerido (AdminLTE)-->
+<link rel="stylesheet" href="../css/adminlte.css">
+<!--end::Complemento requerido (AdminLTE)-->
+<link rel="stylesheet" href="../css/adminlte-docs.css">
+
+
+<!--email_off-->
+  </head>
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary docs-page">
+    <div class="app-wrapper">
+      <!--begin::Header-->
+<nav class="app-header navbar navbar-expand bg-body">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Start Navbar Links-->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
+        </a>
+      </li>
+      
+          <li class="nav-item d-none d-md-block">
+            <a href="../docs/introduction.html" class="nav-link">
+              <i class="bi bi-book me-1" aria-hidden="true"></i>
+              Documentación
+            </a>
+          </li>
+          <li class="nav-item d-none d-md-block">
+            <a href="../index.html" class="nav-link">
+              <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
+              Volver a la vista previa
+            </a>
+          </li>
+        
+    </ul>
+    <!--end::Start Navbar Links-->
+
+    <!--begin::Navbar Buscar-->
+    <form class="navbar-search d-none d-md-block ms-3" role="search" action="../pages/search-results.html">
+      <label for="navbar-search-input" class="visually-hidden">Buscar</label>
+      <div class="navbar-search-field">
+        <input type="search" id="navbar-search-input" name="q" class="form-control" placeholder="Buscar…" autocomplete="off">
+        <button class="navbar-search-submit" type="submit" aria-label="Enviar búsqueda">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <!--end::Navbar Buscar-->
+
+    <!--begin::End Navbar Links-->
+    <ul class="navbar-nav ms-auto">
+      <!--begin::Buscar (pantallas pequeñas: el campo anterior se oculta, así que enlaza a la página de búsqueda)-->
+      <li class="nav-item d-md-none">
+        <a class="nav-link" href="../pages/search-results.html" aria-label="Buscar">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </a>
+      </li>
+      <!--end::Buscar-->
+      <!--begin::Mensajes Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-label="Mensajes: 3 sin leer">
+          <i class="bi bi-chat-text"></i>
+          <span class="navbar-badge badge text-bg-danger">3</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user1-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Brad Diesel
+                  <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
+                </p>
+                <p class="fs-7">Llámame cuando puedas...</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user8-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  John Pierce
+                  <span class="float-end fs-7 text-secondary">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">Ya recibí tu mensaje</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user3-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Nora Silvester
+                  <span class="float-end fs-7 text-warning">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">El asunto va aquí</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">Ver todos los mensajes</a>
+        </div>
+      </li>
+      <!--end::Mensajes Dropdown Menu-->
+
+      <!--begin::Notificaciones Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-label="Notificaciones: 15 unread">
+          <i class="bi bi-bell-fill"></i>
+          <span class="navbar-badge badge text-bg-warning">15</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-envelope me-2"></i> 4 mensajes nuevos
+            <span class="float-end text-secondary fs-7">hace 3 min</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-people-fill me-2"></i> 8 solicitudes de amistad
+            <span class="float-end text-secondary fs-7">hace 12 h</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-file-earmark-fill me-2"></i> 3 informes nuevos
+            <span class="float-end text-secondary fs-7">hace 2 días</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">
+            Ver todas las notificaciones
+          </a>
+        </div>
+      </li>
+      <!--end::Notificaciones Dropdown Menu-->
+
+      <!--begin::Language Menu-->
+      <!-- Markup only: swapping the locale is the application's job. The docs
+           Recetas page shows how to wire this to a real locale switch. -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="language-menu" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Cambiar idioma; idioma actual: español">
+          <i class="bi bi-translate" aria-hidden="true"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="language-menu">
+          <li>
+            <a class="dropdown-item active" href="#" hreflang="es" aria-current="true">
+              Español
+              <i class="bi bi-check-lg ms-2" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="#" hreflang="es">Español</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="fr">Français</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="de">Deutsch</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="ar">العربية</a></li>
+        </ul>
+      </li>
+      <!--end::Language Menu-->
+
+      <!--begin::Alternar pantalla completa-->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-lte-toggle="fullscreen" aria-label="Alternar pantalla completa">
+          <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+          <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+        </a>
+      </li>
+      <!--end::Alternar pantalla completa-->
+
+      <!--begin::Selector de modo de color (#6010)-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="bd-theme" aria-label="Alternar esquema de color" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+          <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
+          <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem;">
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+              <i class="bi bi-sun-fill me-2"></i>
+              Claro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+              <i class="bi bi-moon-fill me-2"></i>
+              Oscuro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+              <i class="bi bi-circle-half me-2"></i>
+              Automático
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+        </ul>
+      </li>
+      <!--end::Selector de modo de color-->
+
+      <!--begin::User Menu Dropdown-->
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+          <img src="../assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="Alexander Pierce">
+          <span class="d-none d-md-inline">Alexander Pierce</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <!--begin::User Image-->
+          <li class="user-header text-bg-primary">
+            <img src="../assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="Alexander Pierce">
+            <p>
+              Alexander Pierce - Desarrollador web
+              <small>Miembro desde nov. de 2023</small>
+            </p>
+          </li>
+          <!--end::User Image-->
+          <!--begin::Menu Cuerpo-->
+          <li class="user-body">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-4 text-center">
+                <a href="#">Seguidores</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Ventas</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Amigos</a>
+              </div>
+            </div>
+            <!--end::Row-->
+          </li>
+          <!--end::Menu Cuerpo-->
+          <!--begin::Menú del pie de página-->
+          <li class="user-footer">
+            <a href="#" class="btn btn-outline-secondary">Perfil</a>
+            <a href="#" class="btn btn-outline-danger float-end">Cerrar sesión</a>
+          </li>
+          <!--end::Menú del pie de página-->
+        </ul>
+      </li>
+      <!--end::User Menu Dropdown-->
+    </ul>
+    <!--end::End Navbar Links-->
+  </div>
+  <!--end::Container-->
+</nav>
+<!--end::Header-->
+      <!--begin::Sidebar (docs mode)-->
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+  <!--begin::Sidebar Brand-->
+  <div class="sidebar-brand">
+    <a href="../docs/introduction.html" class="brand-link">
+      <img src="../assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+      <span class="brand-text fw-light">
+        AdminLTE 4 <span class="opacity-75">&middot; Docs</span>
+      </span>
+    </a>
+  </div>
+  <!--end::Sidebar Brand-->
+  <!--begin::Búsqueda en la barra lateral-->
+  <div class="sidebar-search" role="search">
+    <label for="sidebar-search-input" class="visually-hidden">Filtrar documentación</label>
+    <input type="search" id="sidebar-search-input" class="form-control form-control-sm" placeholder="Filtrar documentación…" autocomplete="off" data-lte-toggle="sidebar-search" data-lte-target="#docs-navigation">
+    <p class="fs-7 text-secondary mt-2 mb-0" data-lte-search-empty role="status" hidden>
+      No hay páginas que coincidan.
+    </p>
+  </div>
+  <!--end::Búsqueda en la barra lateral-->
+  <!--begin::Sidebar Wrapper-->
+  <div class="sidebar-wrapper">
+    <nav class="mt-2" aria-label="Documentation navigation">
+      <!--begin::Sidebar Menu-->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="docs-navigation">
+        <li class="nav-header">COMIENZA AQUÍ</li>
+        <li class="nav-item">
+          <a href="../docs/introduction.html" class="nav-link">
+            <i class="nav-icon bi bi-download"></i>
+            <p>Instalación</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/getting-started.html" class="nav-link">
+            <i class="nav-icon bi bi-rocket-takeoff"></i>
+            <p>Primeros pasos</p>
+          </a>
+        </li>
+
+        <li class="nav-header">FUNDAMENTOS</li>
+        <li class="nav-item">
+          <a href="../docs/layout.html" class="nav-link">
+            <i class="nav-icon bi bi-grip-horizontal"></i>
+            <p>Clases de diseño</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/layout-blueprint.html" class="nav-link">
+            <i class="nav-icon bi bi-diagram-3"></i>
+            <p>Esquema de diseño</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/customization.html" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Personalización</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/color-mode.html" class="nav-link">
+            <i class="nav-icon bi bi-star-half"></i>
+            <p>Modo de color</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/colors.html" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Colores</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/rtl.html" class="nav-link">
+            <i class="nav-icon bi bi-text-paragraph"></i>
+            <p>Compatibilidad con RTL</p>
+          </a>
+        </li>
+
+        <li class="nav-header">DESARROLLO</li>
+        <li class="nav-item">
+          <a href="../docs/recipes.html" class="nav-link active">
+            <i class="nav-icon bi bi-clipboard-check"></i>
+            <p>Recetas</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-ui-checks-grid"></i>
+            <p>
+              Components
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../docs/components/main-header.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Encabezado principal</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/components/main-sidebar.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral principal</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/components/card.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Card</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/components/miscellaneous.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Varios</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-filetype-js"></i>
+            <p>
+              JavaScript Plugins
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../docs/javascript/plugins-overview.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Resumen</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/layout.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Diseño</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/pushmenu.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Menú lateral</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/treeview.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Treeview</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/card-widget.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Widget de tarjeta</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/direct-chat.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Chat directo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/fullscreen.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Pantalla completa</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/sidebar-search.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Búsqueda en la barra lateral</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/accessibility.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Accesibilidad</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/integrations.html" class="nav-link">
+            <i class="nav-icon bi bi-puzzle"></i>
+            <p>Integraciones</p>
+          </a>
+        </li>
+
+        <li class="nav-header">PUBLICACIÓN</li>
+        <li class="nav-item">
+          <a href="../docs/migration.html" class="nav-link">
+            <i class="nav-icon bi bi-arrow-up-right-square"></i>
+            <p>Migración desde v3</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/deployment.html" class="nav-link">
+            <i class="nav-icon bi bi-cloud-upload"></i>
+            <p>Implementación</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/browser-support.html" class="nav-link">
+            <i class="nav-icon bi bi-browser-chrome"></i>
+            <p>Compatibilidad con navegadores</p>
+          </a>
+        </li>
+
+        <li class="nav-header">RECURSOS</li>
+        <li class="nav-item">
+          <a href="../docs/faq.html" class="nav-link">
+            <i class="nav-icon bi bi-question-circle"></i>
+            <p>Preguntas frecuentes</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/how-to-contribute.html" class="nav-link">
+            <i class="nav-icon bi bi-people"></i>
+            <p>Colaborar</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/license.html" class="nav-link">
+            <i class="nav-icon bi bi-patch-check"></i>
+            <p>Licencia</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="https://github.com/ColorlibHQ/AdminLTE" target="_blank" rel="noopener" class="nav-link">
+            <i class="nav-icon bi bi-github"></i>
+            <p>
+              GitHub
+              <i class="bi bi-box-arrow-up-right ms-1" aria-hidden="true"></i>
+            </p>
+          </a>
+        </li>
+      </ul>
+      <!--end::Sidebar Menu-->
+
+      <!-- Back to preview CTA (bottom of sidebar) -->
+      <div class="p-3 mt-3 border-top border-secondary border-opacity-25">
+        <a href="../index.html" class="btn btn-sm btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i>
+          Back to live preview
+        </a>
+      </div>
+    </nav>
+  </div>
+  <!--end::Sidebar Wrapper-->
+</aside>
+<!--end::Sidebar (docs mode)-->
+      <main class="app-main">
+        <div class="app-content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="mb-0 fs-3">Patrones comunes y recetas</h1>
+              </div>
+              <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Documentación</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Recetas
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <p>Soluciones listas para copiar de patrones comunes en paneles de administración. Cada receta supone que seguiste <a href="getting-started.html">Primeros pasos</a> y tienes una página funcional de AdminLTE como base.</p>
+<h5 id="barra-lateral-multinivel-con-iconos-insignias-y-encabezados">Barra lateral multinivel con iconos, insignias y encabezados</h5>
+<p>Los paneles de demostración usan este mismo patrón. Agrupa las secciones con <code>.nav-header</code>; indica la profundidad de los elementos con listas anidadas <code>.nav-treeview</code> y usa <code>.navbar-badge</code> para mostrar cantidades.</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">aside</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-sidebar bg-body-secondary shadow&quot;</span><span style="color:#9CDCFE"> data-bs-theme</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dark&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;sidebar-brand&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;brand-link&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;brand-text fw-light&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Mi panel</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;sidebar-wrapper&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">nav</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;mt-2&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">ul</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav sidebar-menu flex-column&quot;</span><span style="color:#9CDCFE"> data-lte-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;treeview&quot;</span><span style="color:#9CDCFE"> role</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;menu&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-header&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">PRINCIPAL</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link active&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-icon bi bi-speedometer&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Panel</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-icon bi bi-folder&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#D4D4D4">              Proyectos</span></span>
+<span class="line"><span style="color:#808080">              &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;badge text-bg-info ms-2&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">12</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">              &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-arrow bi bi-chevron-right&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;/</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">ul</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav nav-treeview&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">              &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link&quot;</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-icon bi bi-circle&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Activos</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">              &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link&quot;</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-icon bi bi-circle&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Archivados</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;/</span><span style="color:#569CD6">ul</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-header&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">INFORMES</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-icon bi bi-bar-chart&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Ventas</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;badge text-bg-danger ms-auto&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">3</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">ul</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">nav</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">aside</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Para marcar la página actual como activa, genera en el servidor la clase <code>.active</code> en el <code>.nav-link</code> correspondiente. En frameworks SPA, agrégala al cambiar de ruta.</p>
+<h5 id="resaltar-con-javascript-el-elemento-activo-de-la-barra-lateral">Resaltar con JavaScript el elemento activo de la barra lateral</h5>
+<p>Si renderizas una sola vez la barra lateral y quieres resaltar rutas en el cliente:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="js"><code><span class="line"><span style="color:#569CD6">function</span><span style="color:#DCDCAA"> setActiveSidebarItem</span><span style="color:#D4D4D4">(</span><span style="color:#9CDCFE">href</span><span style="color:#D4D4D4">) {</span></span>
+<span class="line"><span style="color:#9CDCFE">  document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">querySelectorAll</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;.sidebar-menu .nav-link&quot;</span><span style="color:#D4D4D4">).</span><span style="color:#DCDCAA">forEach</span><span style="color:#D4D4D4">((</span><span style="color:#9CDCFE">el</span><span style="color:#D4D4D4">) </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> {</span></span>
+<span class="line"><span style="color:#9CDCFE">    el</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">classList</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">toggle</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;active&quot;</span><span style="color:#D4D4D4">, </span><span style="color:#9CDCFE">el</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">getAttribute</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;href&quot;</span><span style="color:#D4D4D4">) === </span><span style="color:#9CDCFE">href</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#D4D4D4">  })</span></span>
+<span class="line"><span style="color:#D4D4D4">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A9955">// Ejecutar al cambiar de ruta</span></span>
+<span class="line"><span style="color:#DCDCAA">setActiveSidebarItem</span><span style="color:#D4D4D4">(</span><span style="color:#9CDCFE">window</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">location</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">pathname</span><span style="color:#D4D4D4">)</span></span></code></pre>
+<h5 id="tablas-de-datos-adaptables">Tablas de datos adaptables</h5>
+<p>Envuelve una <code>&lt;table&gt;</code> en <code>.table-responsive</code> para que tenga desplazamiento horizontal en pantallas estrechas y no se desborde de la tarjeta.</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">h3</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-title&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Pedidos recientes</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-body p-0&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;table-responsive&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">table</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;table table-striped align-middle mb-0&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">thead</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">tr</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">#</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Cliente</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Total</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Estado</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">            &lt;</span><span style="color:#569CD6">th</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;text-end&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Acciones</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">th</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;/</span><span style="color:#569CD6">tr</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">thead</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">tbody</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">          &lt;!-- rows --&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">tbody</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">table</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Para habilitar ordenamiento, filtrado y paginación interactivos, usa <a href="integrations.html#tabulator">Tabulator</a> — la demostración <code>tables/data.html</code> contiene un ejemplo completo.</p>
+<h5 id="menú-desplegable-de-usuario-en-la-barra-superior">Menú desplegable de usuario en la barra superior</h5>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item dropdown user-menu&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link dropdown-toggle&quot;</span><span style="color:#9CDCFE"> data-bs-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;d-none d-md-inline me-1&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Jane Doe</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-person-circle fs-5&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">ul</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-menu dropdown-menu-end&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/profile&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-person me-2&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Perfil</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/settings&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-gear me-2&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Configuración</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">hr</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-divider&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/logout&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-item text-danger&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-box-arrow-right me-2&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Cerrar sesión</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">ul</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Coloca este elemento dentro de <code>&lt;ul class=&quot;navbar-nav ms-auto&quot;&gt;</code> en <code>.app-header</code>.</p>
+<h5 id="selector-de-idioma-conectado-a-una-configuración-regional-real">Selector de idioma conectado a una configuración regional real</h5>
+<p>La barra superior de demostración incluye un selector de idioma, pero el marcado por sí solo no cambia nada: la aplicación debe cambiar el idioma, y hacerlo mal es peor que no ofrecer la opción. El patrón siguiente cubre los aspectos esenciales de un selector.</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-item dropdown&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link&quot;</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> id</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;language-menu&quot;</span><span style="color:#9CDCFE"> data-bs-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown&quot;</span></span>
+<span class="line"><span style="color:#9CDCFE">     aria-expanded</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;false&quot;</span><span style="color:#9CDCFE"> aria-label</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;Cambiar idioma; idioma actual: español&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-translate&quot;</span><span style="color:#9CDCFE"> aria-hidden</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;true&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">ul</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-menu dropdown-menu-end&quot;</span><span style="color:#9CDCFE"> aria-labelledby</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;language-menu&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-item active&quot;</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/es/dashboard&quot;</span><span style="color:#9CDCFE"> hreflang</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;es&quot;</span><span style="color:#9CDCFE"> aria-current</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;true&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#D4D4D4">        Español </span><span style="color:#808080">&lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-check-lg ms-2&quot;</span><span style="color:#9CDCFE"> aria-hidden</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;true&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-item&quot;</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/en/dashboard&quot;</span><span style="color:#9CDCFE"> hreflang</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;en&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Inglés</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dropdown-item&quot;</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/ar/dashboard&quot;</span><span style="color:#9CDCFE"> hreflang</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;ar&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">العربية</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">ul</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Cuatro aspectos distinguen un selector funcional de uno meramente decorativo:</p>
+<ol>
+<li><strong>Cada opción es un enlace real a la misma página en otro idioma</strong>, no un <code>#</code> con un controlador de clics. Un enlace se puede guardar en marcadores, indexar, abrir en una pestaña nueva y funciona antes de que cargue JavaScript. Agrega <code>hreflang</code> para que las tecnologías de asistencia anuncien el cambio de idioma y los motores de búsqueda relacionen las URL.</li>
+<li><strong>El idioma debe formar parte de la URL</strong> (<code>/es/dashboard</code>) o de una cookie que lea el servidor; no de <code>localStorage</code>. El HTML renderizado en el servidor debe conocer el idioma <em>antes</em> de generarse; <code>localStorage</code> solo se puede leer después de que la página ya se haya enviado en el idioma incorrecto.</li>
+<li><strong>Marca el idioma actual</strong> con <code>.active</code> y <code>aria-current=&quot;true&quot;</code>, y nómbralo en el <code>aria-label</code> del botón. Una bandera por sí sola no representa un idioma: varios idiomas comparten bandera y varios países comparten idioma.</li>
+<li><strong>Para cambiar a un idioma RTL se necesita la hoja de estilos RTL</strong>, además del atributo <code>dir</code>. Sirve <code>adminlte.rtl.css</code> y establece <code>&lt;html lang=&quot;ar&quot; dir=&quot;rtl&quot;&gt;</code>; consulta <a href="rtl.html">Compatibilidad con RTL</a>.</li>
+</ol>
+<p>Si el idioma está en la URL, el servidor selecciona la hoja de estilos y el selector se mantiene como marcado simple:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#6A9955">&lt;!-- Se genera en cada solicitud según el idioma activo --&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">html</span><span style="color:#9CDCFE"> lang</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;ar&quot;</span><span style="color:#9CDCFE"> dir</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;rtl&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">link</span><span style="color:#9CDCFE"> rel</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;stylesheet&quot;</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/css/adminlte.rtl.css&quot;</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>En una aplicación renderizada en el cliente, haz lo mismo desde el router: cambia el idioma, vuelve a renderizar y actualiza la hoja de estilos <code>href</code> — en lugar de traducir directamente los nodos de texto.</p>
+<h5 id="tarjeta-kpi-small-box">Tarjeta KPI (small-box)</h5>
+<p>Cajas de estadísticas de colores vivos en la parte superior de la mayoría de los paneles:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;row g-3&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;col-lg-3 col-6&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;small-box text-bg-primary&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;inner&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">150</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Pedidos nuevos</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">p</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-cart small-box-icon&quot;</span><span style="color:#9CDCFE"> aria-hidden</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;true&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;small-box-footer link-light&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#D4D4D4">        Más información </span><span style="color:#808080">&lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-arrow-right&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">  &lt;!-- Repetir tres veces más con valores y colores diferentes --&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Reemplaza <code>text-bg-primary</code> por <code>text-bg-success</code>, <code>text-bg-warning</code>, <code>text-bg-danger</code>, etc.</p>
+<h5 id="fila-de-ruta-de-navegación-y-título-de-página">Fila de ruta de navegación y título de página</h5>
+<p>Este es el patrón estándar de <code>.app-content-header</code> que se usa en todas las páginas de demostración:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-content-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;container-fluid&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;row&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;col-sm-6&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">h3</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;mb-0&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Título de página</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;col-sm-6&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">ol</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;breadcrumb float-sm-end&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;breadcrumb-item&quot;</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Inicio</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;breadcrumb-item&quot;</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/section&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Sección</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">li</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;breadcrumb-item active&quot;</span><span style="color:#9CDCFE"> aria-current</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;page&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Página actual</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">li</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">ol</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<h5 id="línea-de-tiempo">Línea de tiempo</h5>
+<p>Para mostrar actividad, registros de auditoría o cronogramas:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;timeline&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-envelope bg-info&quot;</span><span style="color:#9CDCFE"> aria-hidden</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;true&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;timeline-item&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;time&quot;</span><span style="color:#808080">&gt;&lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-clock&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4"> 12:05</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">h3</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;timeline-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Olivia</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4"> te envió un mensaje</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;timeline-body&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#D4D4D4">        Hola, ¿podemos revisar mañana a las 10 las cifras del cuarto trimestre?</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;timeline-footer&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn btn-primary btn-sm&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Leer más</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">  &lt;!-- repeat --&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>El componente de línea de tiempo está en <code>_timeline.scss</code> y tiene variantes. Consulta <a href="../UI/timeline.html"><code>/UI/timeline.html</code></a> para verlas todas.</p>
+<h5 id="widget-de-chat-directo">Widget de chat directo</h5>
+<p>Tarjeta con estilo de chat para atención al cliente en vivo, conversaciones de equipo y otros usos. Incluye un selector de contactos y globos de mensajes.</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card direct-chat direct-chat-primary&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">h3</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-title&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Chat directo</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-tools&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;badge text-bg-primary&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">3 nuevos</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">button</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;button&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn btn-tool&quot;</span><span style="color:#9CDCFE"> data-lte-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;chat-pane&quot;</span><span style="color:#9CDCFE"> title</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;Contactos&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-people-fill&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">button</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-body&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-messages&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-msg&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-infos clearfix&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-name float-start&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Olivia</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-timestamp float-end&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">12:05</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">img</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-img&quot;</span><span style="color:#9CDCFE"> src</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/avatars/olivia.jpg&quot;</span><span style="color:#9CDCFE"> alt</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;&quot;</span><span style="color:#808080"> /&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-text&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Hola, ¿estás listo para la revisión?</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-msg right&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-infos clearfix&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-name float-end&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Tú</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-timestamp float-start&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">12:06</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">img</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-img&quot;</span><span style="color:#9CDCFE"> src</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/avatars/me.jpg&quot;</span><span style="color:#9CDCFE"> alt</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;&quot;</span><span style="color:#808080"> /&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-text&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Sí, ya voy.</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;direct-chat-contacts&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">      &lt;!-- Lista de contactos, visible al activar el panel de chat --&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-footer&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">form</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;input-group&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">input</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;text&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;form-control&quot;</span><span style="color:#9CDCFE"> placeholder</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;Mensaje…&quot;</span><span style="color:#808080"> /&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">button</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;submit&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn btn-primary&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-send&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">button</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">form</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Para ver una aplicación de chat a pantalla completa, consulta <code>/pages/chat.html</code> en la demostración.</p>
+<h5 id="responder-a-los-cambios-del-diseño-y-la-barra-lateral">Responder a los cambios del diseño y la barra lateral</h5>
+<p>Escucha los eventos de los complementos para coordinar tu código; por ejemplo, vuelve a ajustar un gráfico cuando se contraiga la barra lateral, para que mida de nuevo el ancho de su contenedor:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="js"><code><span class="line"><span style="color:#569CD6">let</span><span style="color:#9CDCFE"> chart</span><span style="color:#D4D4D4"> = </span><span style="color:#6A9955">/* instancia de ApexCharts */</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">addEventListener</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;collapse.lte.push-menu&quot;</span><span style="color:#D4D4D4">, () </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> {</span></span>
+<span class="line"><span style="color:#6A9955">  // esperar a que termine la transición (unos 300 ms de forma predeterminada)</span></span>
+<span class="line"><span style="color:#DCDCAA">  setTimeout</span><span style="color:#D4D4D4">(() </span><span style="color:#569CD6">=&gt;</span><span style="color:#9CDCFE"> chart</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">updateOptions</span><span style="color:#D4D4D4">({}), </span><span style="color:#B5CEA8">350</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#D4D4D4">})</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">addEventListener</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;open.lte.push-menu&quot;</span><span style="color:#D4D4D4">, () </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> {</span></span>
+<span class="line"><span style="color:#DCDCAA">  setTimeout</span><span style="color:#D4D4D4">(() </span><span style="color:#569CD6">=&gt;</span><span style="color:#9CDCFE"> chart</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">updateOptions</span><span style="color:#D4D4D4">({}), </span><span style="color:#B5CEA8">350</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#D4D4D4">})</span></span></code></pre>
+<p>El mismo patrón funciona con Tabulator, FullCalendar y cualquier biblioteca que lea el ancho de su contenedor al inicializarse.</p>
+<h5 id="cargar-contenido-en-una-tarjeta-mediante-fetch">Cargar contenido en una tarjeta mediante <code>fetch()</code></h5>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card&quot;</span><span style="color:#9CDCFE"> id</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;users-card&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">h3</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-title&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Usuarios</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">h3</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-tools&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;spinner-border spinner-border-sm text-secondary d-none&quot;</span><span style="color:#9CDCFE"> id</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;users-spinner&quot;</span><span style="color:#9CDCFE"> role</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;status&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card-body p-0&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> id</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;users-body&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;text-secondary p-3&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Cargando</span><span style="color:#569CD6">&amp;hellip;</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">script</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#569CD6">  const</span><span style="color:#4FC1FF"> spinner</span><span style="color:#D4D4D4"> = </span><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">getElementById</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;users-spinner&quot;</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#569CD6">  const</span><span style="color:#4FC1FF"> body</span><span style="color:#D4D4D4"> = </span><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">getElementById</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;users-body&quot;</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#9CDCFE">  spinner</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">classList</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">remove</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;d-none&quot;</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#DCDCAA">  fetch</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;/api/users&quot;</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#D4D4D4">    .</span><span style="color:#DCDCAA">then</span><span style="color:#D4D4D4">((</span><span style="color:#9CDCFE">r</span><span style="color:#D4D4D4">) </span><span style="color:#569CD6">=&gt;</span><span style="color:#9CDCFE"> r</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">text</span><span style="color:#D4D4D4">())</span></span>
+<span class="line"><span style="color:#D4D4D4">    .</span><span style="color:#DCDCAA">then</span><span style="color:#D4D4D4">((</span><span style="color:#9CDCFE">html</span><span style="color:#D4D4D4">) </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> { </span><span style="color:#9CDCFE">body</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">innerHTML</span><span style="color:#D4D4D4"> = </span><span style="color:#9CDCFE">html</span><span style="color:#D4D4D4"> })</span></span>
+<span class="line"><span style="color:#D4D4D4">    .</span><span style="color:#DCDCAA">catch</span><span style="color:#D4D4D4">(() </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> { </span><span style="color:#9CDCFE">body</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">textContent</span><span style="color:#D4D4D4"> = </span><span style="color:#CE9178">&quot;No se pudo cargar.&quot;</span><span style="color:#D4D4D4"> })</span></span>
+<span class="line"><span style="color:#D4D4D4">    .</span><span style="color:#DCDCAA">finally</span><span style="color:#D4D4D4">(() </span><span style="color:#569CD6">=&gt;</span><span style="color:#9CDCFE"> spinner</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">classList</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">add</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;d-none&quot;</span><span style="color:#D4D4D4">))</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">script</span><span style="color:#808080">&gt;</span></span></code></pre>
+<h5 id="confirmar-acciones-destructivas-antes-del-envío">Confirmar acciones destructivas antes del envío</h5>
+<p>Modal de Bootstrap con un patrón sencillo de confirmación:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">button</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;button&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn btn-danger&quot;</span><span style="color:#9CDCFE"> data-bs-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal&quot;</span><span style="color:#9CDCFE"> data-bs-target</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#confirmDelete&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#D4D4D4">  Eliminar cuenta</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">button</span><span style="color:#808080">&gt;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal fade&quot;</span><span style="color:#9CDCFE"> id</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;confirmDelete&quot;</span><span style="color:#9CDCFE"> tabindex</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;-1&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal-dialog&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal-content&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">h5</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal-title&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">¿Eliminar la cuenta?</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">h5</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">button</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;button&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn-close&quot;</span><span style="color:#9CDCFE"> data-bs-dismiss</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">button</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal-body&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#D4D4D4">        Esta acción eliminará permanentemente tu cuenta y todos los datos asociados. No se puede deshacer.</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal-footer&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">button</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;button&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn btn-outline-secondary&quot;</span><span style="color:#9CDCFE"> data-bs-dismiss</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;modal&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Cancelar</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">button</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;</span><span style="color:#569CD6">form</span><span style="color:#9CDCFE"> action</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/account/delete&quot;</span><span style="color:#9CDCFE"> method</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;POST&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;d-inline&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">          &lt;</span><span style="color:#569CD6">button</span><span style="color:#9CDCFE"> type</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;submit&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;btn btn-danger&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Sí, eliminarla</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">button</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">        &lt;/</span><span style="color:#569CD6">form</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>El <a href="color-mode.html">modo de color</a>, la <a href="javascript/accessibility.html">accesibilidad</a> y el JavaScript incluido gestionan automáticamente el cierre con Escape, la restricción del foco y la navegación con teclado dentro del modal.</p>
+<h5 id="gráficos-que-se-adaptan-al-modo-oscuro">Gráficos que se adaptan al modo oscuro</h5>
+<p>Las bibliotecas de gráficos dibujan su propio texto e información sobre herramientas, así que no conocen <code>data-bs-theme</code>. ApexCharts, por ejemplo, muestra una ayuda clara y etiquetas de eje gris oscuro de forma predeterminada. En una tarjeta oscura, el color heredado de la ayuda queda casi blanco sobre blanco y no se lee. La biblioteca ofrece un tema oscuro; indícale cuál usar y actualízalo cuando cambie el modo.</p>
+<p>Todas las páginas de demostración incluyen este helper en los scripts compartidos al pie de la página. Establece el valor global predeterminado de <code>theme.mode</code> de ApexCharts según <code>&lt;html data-bs-theme&gt;</code> <strong>antes</strong> de crear los gráficos, mantiene transparente el fondo del gráfico (el modo oscuro lo volvería gris) y observa el atributo para que cada gráfico con <code>chart.id</code> responda al selector, a la preferencia del sistema en modo automático o a tu propio código:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">script</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#569CD6">  const</span><span style="color:#DCDCAA"> mode</span><span style="color:#D4D4D4"> = () </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> (</span><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">documentElement</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">getAttribute</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;data-bs-theme&quot;</span><span style="color:#D4D4D4">) === </span><span style="color:#CE9178">&quot;dark&quot;</span><span style="color:#D4D4D4"> ? </span><span style="color:#CE9178">&quot;dark&quot;</span><span style="color:#D4D4D4"> : </span><span style="color:#CE9178">&quot;light&quot;</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#9CDCFE">  globalThis</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">Apex</span><span style="color:#D4D4D4"> ||= {}                                   </span><span style="color:#6A9955">// objeto de opciones globales de ApexCharts</span></span>
+<span class="line"><span style="color:#9CDCFE">  Apex</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">theme</span><span style="color:#D4D4D4"> = { </span><span style="color:#9CDCFE">mode:</span><span style="color:#DCDCAA"> mode</span><span style="color:#D4D4D4">() }</span></span>
+<span class="line"><span style="color:#9CDCFE">  Apex</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">chart</span><span style="color:#D4D4D4"> = </span><span style="color:#9CDCFE">Object</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">assign</span><span style="color:#D4D4D4">(</span><span style="color:#9CDCFE">Apex</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">chart</span><span style="color:#D4D4D4"> || {}, { </span><span style="color:#9CDCFE">background:</span><span style="color:#CE9178"> &quot;transparent&quot;</span><span style="color:#D4D4D4"> })</span></span>
+<span class="line"><span style="color:#569CD6">  new</span><span style="color:#DCDCAA"> MutationObserver</span><span style="color:#D4D4D4">(() </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> {</span></span>
+<span class="line"><span style="color:#569CD6">    const</span><span style="color:#4FC1FF"> next</span><span style="color:#D4D4D4"> = </span><span style="color:#DCDCAA">mode</span><span style="color:#D4D4D4">()</span></span>
+<span class="line"><span style="color:#9CDCFE">    Apex</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">theme</span><span style="color:#D4D4D4"> = { </span><span style="color:#9CDCFE">mode:</span><span style="color:#9CDCFE"> next</span><span style="color:#D4D4D4"> }</span></span>
+<span class="line"><span style="color:#C586C0">    for</span><span style="color:#D4D4D4"> (</span><span style="color:#569CD6">const</span><span style="color:#D4D4D4"> { </span><span style="color:#4FC1FF">chart</span><span style="color:#D4D4D4"> } </span><span style="color:#569CD6">of</span><span style="color:#9CDCFE"> Apex</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">_chartInstances</span><span style="color:#D4D4D4"> || []) {</span></span>
+<span class="line"><span style="color:#9CDCFE">      chart</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">updateOptions</span><span style="color:#D4D4D4">({ </span><span style="color:#9CDCFE">theme:</span><span style="color:#D4D4D4"> { </span><span style="color:#9CDCFE">mode:</span><span style="color:#9CDCFE"> next</span><span style="color:#D4D4D4"> } }, </span><span style="color:#569CD6">false</span><span style="color:#D4D4D4">, </span><span style="color:#569CD6">false</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#D4D4D4">    }</span></span>
+<span class="line"><span style="color:#D4D4D4">  }).</span><span style="color:#DCDCAA">observe</span><span style="color:#D4D4D4">(</span><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">documentElement</span><span style="color:#D4D4D4">, { </span><span style="color:#9CDCFE">attributes:</span><span style="color:#569CD6"> true</span><span style="color:#D4D4D4">, </span><span style="color:#9CDCFE">attributeFilter:</span><span style="color:#D4D4D4"> [</span><span style="color:#CE9178">&quot;data-bs-theme&quot;</span><span style="color:#D4D4D4">] })</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">script</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">script</span><span style="color:#9CDCFE"> src</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">script</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Asigna un <code>id</code> a cada gráfico para que se registre y reciba las actualizaciones:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="js"><code><span class="line"><span style="color:#569CD6">new</span><span style="color:#DCDCAA"> ApexCharts</span><span style="color:#D4D4D4">(</span><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">querySelector</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;#revenue-chart&quot;</span><span style="color:#D4D4D4">), {</span></span>
+<span class="line"><span style="color:#9CDCFE">  chart:</span><span style="color:#D4D4D4"> { </span><span style="color:#9CDCFE">id:</span><span style="color:#CE9178"> &quot;revenue-chart&quot;</span><span style="color:#D4D4D4">, </span><span style="color:#9CDCFE">type:</span><span style="color:#CE9178"> &quot;area&quot;</span><span style="color:#D4D4D4">, </span><span style="color:#9CDCFE">height:</span><span style="color:#B5CEA8"> 300</span><span style="color:#D4D4D4"> },</span></span>
+<span class="line"><span style="color:#6A9955">  // …</span></span>
+<span class="line"><span style="color:#D4D4D4">}).</span><span style="color:#DCDCAA">render</span><span style="color:#D4D4D4">()</span></span></code></pre>
+<p>Si prefieres el evento de ColorMode al observador del atributo, <code>document.addEventListener(&quot;changed.lte.color-mode&quot;, e =&gt; …)</code> recibe <code>e.detail.resolved</code> (<code>&quot;light&quot;</code> o <code>&quot;dark&quot;</code>). El observador también detecta cambios en la preferencia del sistema en modo automático y cualquier código que modifique directamente el atributo. La misma idea se aplica a otras bibliotecas: Chart.js lee <code>Chart.defaults.color</code> y <code>Chart.defaults.borderColor</code>; puedes obtener esos valores con <code>getComputedStyle(document.body)</code> y volver a aplicarlos mediante <code>chart.update()</code> en el mismo observador.</p>
+<h5 id="imprimir-una-página-como-documento">Imprimir una página como documento</h5>
+<p>Una página impresa es un documento, no una captura de la aplicación. Por eso AdminLTE omite el marco —encabezado, menú lateral y pie de página— y utiliza todo el ancho de la hoja para el contenido. El contenido se prepara para leerse en papel: se imprime la dirección de los enlaces externos, los botones conservan un contorno y todo aparece en negro sobre blanco para ahorrar tinta.</p>
+<p>En las páginas que se imprimen como <em>documentos</em> —una factura, un presupuesto, una orden de trabajo o un comprobante para un cliente—, esos dos detalles pueden resultar inconvenientes. No hace falta que aparezca <code>Pagar en línea (https://pay.example.com/inv/12345?token=…)</code> en una factura impresa ni que los botones queden enmarcados. Agrega <code>data-lte-print=&quot;plain&quot;</code> a <code>&lt;html&gt;</code>, <code>&lt;body&gt;</code> o a cualquier contenedor para ocultarlos y mantener el texto negro sobre fondo blanco:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">html</span><span style="color:#9CDCFE"> lang</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;es&quot;</span><span style="color:#9CDCFE"> data-lte-print</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;plain&quot;</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Limita el atributo a una parte de la página cuando solo esa parte sea el documento:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;card&quot;</span><span style="color:#9CDCFE"> data-lte-print</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;plain&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">…la factura…</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Si la página siempre se imprime como documento, establece el atributo al iniciar la impresión:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="js"><code><span class="line"><span style="color:#9CDCFE">document</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">querySelector</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;#print-invoice&quot;</span><span style="color:#D4D4D4">).</span><span style="color:#DCDCAA">addEventListener</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;click&quot;</span><span style="color:#D4D4D4">, () </span><span style="color:#569CD6">=&gt;</span><span style="color:#D4D4D4"> {</span></span>
+<span class="line"><span style="color:#9CDCFE">  document</span><span style="color:#D4D4D4">.</span><span style="color:#9CDCFE">documentElement</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">setAttribute</span><span style="color:#D4D4D4">(</span><span style="color:#CE9178">&quot;data-lte-print&quot;</span><span style="color:#D4D4D4">, </span><span style="color:#CE9178">&quot;plain&quot;</span><span style="color:#D4D4D4">)</span></span>
+<span class="line"><span style="color:#9CDCFE">  window</span><span style="color:#D4D4D4">.</span><span style="color:#DCDCAA">print</span><span style="color:#D4D4D4">()</span></span>
+<span class="line"><span style="color:#D4D4D4">})</span></span></code></pre>
+<p>Para imprimir una copia de la pantalla con el menú y todo el marco de la aplicación, agrega <code>data-lte-print=&quot;app&quot;</code> a <code>&lt;html&gt;</code> o <code>&lt;body&gt;</code>:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">html</span><span style="color:#9CDCFE"> lang</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;es&quot;</span><span style="color:#9CDCFE"> data-lte-print</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app&quot;</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Para mostrar solo una parte del marco, usa las utilidades de visualización de Bootstrap: <code>.d-print-flex</code> para el encabezado (una barra de navegación) y <code>.d-print-block</code> para la barra lateral o el pie de página:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">aside</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-sidebar bg-body-secondary shadow d-print-block&quot;</span><span style="color:#9CDCFE"> data-bs-theme</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dark&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">…</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">aside</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p><code>.d-print-none</code> oculta en ambos modos cualquier elemento que no quieras imprimir, como una barra de botones encima de la factura.</p>
+<h5 id="próximos-pasos">Próximos pasos</h5>
+<ul>
+<li><a href="javascript/plugins-overview.html">Descripción general de los complementos JavaScript</a> — nombres de eventos y métodos de cada complemento</li>
+<li><a href="integrations.html">Integraciones recomendadas</a> — si necesitas algo más que lo incluido en esta lista</li>
+<li><a href="customization.html">Personalización</a> — cambiar colores, ancho de la barra lateral y puntos de interrupción</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <!--begin::Pie de página-->
+<footer class="app-footer">
+  <!--begin::To the end-->
+  <div class="float-end d-none d-sm-inline">Tu panel de administración</div>
+  <!--end::To the end-->
+  <!--begin::Copyright-->
+  <strong>
+    Derechos de autor &copy; 2014-2026&nbsp;
+    <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+  </strong>
+  Todos los derechos reservados.
+  <!--end::Copyright-->
+</footer>
+<!--end::Pie de página-->
+    </div>
+    <!--begin::Complemento de terceros (OverlayScrollbars)-->
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento de terceros (OverlayScrollbars)--><!--begin::Complemento requerido (popperjs for Bootstrap 5)-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento requerido (popperjs for Bootstrap 5)--><!--begin::Complemento requerido (Bootstrap 5)-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento requerido (Bootstrap 5)--><!--begin::Complemento requerido (AdminLTE)-->
+<script src="../js/adminlte.js"></script>
+<!--end::Complemento requerido (AdminLTE)-->
+<!--begin::OverlayScrollbars Configure-->
+<script>
+const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper"
+const Default = {
+  scrollbarTheme: "os-theme-light",
+  scrollbarAutoHide: "leave",
+  scrollbarClickScroll: true
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER)
+  
+  // Disable OverlayScrollbars on mobile devices to prevent touch interference
+  const isMobile = window.innerWidth <= 992
+  
+  if (
+    sidebarWrapper &&
+    OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined &&
+    !isMobile
+  ) {
+    OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+      scrollbars: {
+        theme: Default.scrollbarTheme,
+        autoHide: Default.scrollbarAutoHide,
+        clickScroll: Default.scrollbarClickScroll
+      }
+    })
+  }
+})
+</script>
+<!--end::OverlayScrollbars Configure-->
+<!--begin::Gráficos según el modo de color-->
+<script>
+  // ApexCharts draws light-theme tooltips and axis text unless told otherwise,
+  // which is unreadable in dark mode (#6105). Give it the page's colour mode as
+  // a valor global predeterminado before any chart is created — this runs before the chart
+  // pages' own scripts — and mantener sincronizados todos los gráficos que tengan un `chart.id` in step
+  // cuando cambie el modo (ColorMode, the OS in auto mode, or código propio).
+  ;(() => {
+    "use strict"
+    const mode = () => (document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light")
+    // `Apex` is ApexCharts' global-options object; it must exist antes de cargar la biblioteca.
+    // theme.mode also sets a dark chart background — keep the card's instead.
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment
+    globalThis.Apex ||= {}
+    const apex = globalThis.Apex
+    apex.theme = { mode: mode() }
+    apex.chart = Object.assign(apex.chart || {}, { background: "transparent" })
+    new MutationObserver(() => {
+      const next = mode()
+      apex.theme = { mode: next }
+      const instances = apex._chartInstances || []
+      for (const { chart } of instances) {
+        chart.updateOptions({ theme: { mode: next } }, false, false)
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-bs-theme"] })
+  })()
+</script>
+<!--end::Gráficos según el modo de color-->
+
+
+<!--begin::Selector de modo de color-->
+<!-- The selector claro/oscuro/automático incluido in adminlte.js as the ColorMode
+     module (since 4.1) — no se necesita un script en la página. Only the no-flash snippet
+     in <head> stays inline, because it must run before first paint. -->
+<!--end::Selector de modo de color-->
+
+<!--email_on-->
+  </body>
+</html>

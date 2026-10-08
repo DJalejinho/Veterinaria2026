@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="es">
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>AdminLTE 4 | Galería</title>
+
+<!--begin::Theme Init (prevents flash of incorrect theme on load, #6043)-->
+<script>
+  ;(() => {
+    "use strict"
+    const root = document.documentElement
+
+    // Applications with their own theming opt out of AdminLTE's color mode
+    // entirely, here as well as in the bundle.
+    if (root.getAttribute("data-lte-color-mode") === "off") {
+      return
+    }
+
+    const STORAGE_KEY = "lte-theme"
+    let stored = null
+    try {
+      stored = localStorage.getItem(STORAGE_KEY)
+    } catch {
+      // localStorage may be unavailable (private mode, sandboxed iframe).
+    }
+    // Mirror the precedence in color-mode.ts: the visitor's stored choice
+    // wins, then a theme this page declared itself, then the OS preference.
+    const authored = root.getAttribute("data-bs-theme")
+    let resolved = "light"
+    if (stored === "dark" || stored === "light") {
+      resolved = stored
+    } else if (authored === "dark" || authored === "light") {
+      resolved = authored
+    } else if (globalThis.matchMedia("(prefers-color-scheme: dark)").matches) {
+      resolved = "dark"
+    }
+    root.setAttribute("data-bs-theme", resolved)
+    root.style.colorScheme = resolved
+    // Flag values computed here, so the bundle does not mistake them for a
+    // theme the page declared and stop following the OS preference.
+    if (resolved !== authored) {
+      root.setAttribute("data-lte-theme-resolved", "")
+    }
+  })()
+</script>
+<!--end::Theme Init-->
+
+<!--begin::Accesibilidad Meta Tags-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<!--end::Accesibilidad Meta Tags-->
+
+<!--begin::Primary Meta Tags-->
+<meta name="title" content="AdminLTE 4 | Galería">
+<meta name="author" content="ColorlibHQ">
+<meta name="description" content="AdminLTE es una plantilla gratuita de panel de administración para Bootstrap 5, con casi 50 páginas de ejemplo, creada con JavaScript vanilla y diseñada teniendo en cuenta la accesibilidad.">
+<meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard, accessible admin panel">
+<!--end::Primary Meta Tags-->
+
+<!--begin::Accesibilidad Características-->
+<!-- Skip links will be dynamically added by accessibility.js -->
+<meta name="supported-color-schemes" content="light dark">
+<link rel="preload" href="../css/adminlte.css" as="style">
+<!--end::Accesibilidad Características-->
+
+<!--begin::Fonts-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" media="print" onload="this.media='all'">
+<!--end::Fonts-->
+
+<!--begin::Complemento de terceros (OverlayScrollbars)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" crossorigin="anonymous">
+<!--end::Complemento de terceros (OverlayScrollbars)-->
+
+<!--begin::Complemento de terceros (Bootstrap Icons)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+<!--end::Complemento de terceros (Bootstrap Icons)-->
+
+<!--begin::Complemento requerido (AdminLTE)-->
+<link rel="stylesheet" href="../css/adminlte.css">
+<!--end::Complemento requerido (AdminLTE)-->
+
+
+
+
+  </head>
+  <!--end::Head-->
+  <!--begin::Cuerpo-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <!--begin::Header-->
+<nav class="app-header navbar navbar-expand bg-body">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Start Navbar Links-->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
+        </a>
+      </li>
+      
+          <li class="nav-item d-none d-md-block">
+            <a href="../index.html" class="nav-link">
+              <i class="bi bi-grid-1x2 me-1" aria-hidden="true"></i>
+              Vista previa
+            </a>
+          </li>
+          <li class="nav-item d-none d-md-block">
+            <a href="../docs/introduction.html" class="nav-link">
+              <i class="bi bi-book me-1" aria-hidden="true"></i>
+              Documentación
+            </a>
+          </li>
+        
+    </ul>
+    <!--end::Start Navbar Links-->
+
+    <!--begin::Navbar Buscar-->
+    <form class="navbar-search d-none d-md-block ms-3" role="search" action="../pages/search-results.html">
+      <label for="navbar-search-input" class="visually-hidden">Buscar</label>
+      <div class="navbar-search-field">
+        <input type="search" id="navbar-search-input" name="q" class="form-control" placeholder="Buscar…" autocomplete="off">
+        <button class="navbar-search-submit" type="submit" aria-label="Enviar búsqueda">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <!--end::Navbar Buscar-->
+
+    <!--begin::End Navbar Links-->
+    <ul class="navbar-nav ms-auto">
+      <!--begin::Buscar (pantallas pequeñas: el campo anterior se oculta, así que enlaza a la página de búsqueda)-->
+      <li class="nav-item d-md-none">
+        <a class="nav-link" href="../pages/search-results.html" aria-label="Buscar">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </a>
+      </li>
+      <!--end::Buscar-->
+      <!--begin::Mensajes Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-label="Mensajes: 3 sin leer">
+          <i class="bi bi-chat-text"></i>
+          <span class="navbar-badge badge text-bg-danger">3</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user1-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Brad Diesel
+                  <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
+                </p>
+                <p class="fs-7">Llámame cuando puedas...</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user8-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  John Pierce
+                  <span class="float-end fs-7 text-secondary">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">Ya recibí tu mensaje</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user3-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Nora Silvester
+                  <span class="float-end fs-7 text-warning">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">El asunto va aquí</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">Ver todos los mensajes</a>
+        </div>
+      </li>
+      <!--end::Mensajes Dropdown Menu-->
+
+      <!--begin::Notificaciones Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-label="Notificaciones: 15 unread">
+          <i class="bi bi-bell-fill"></i>
+          <span class="navbar-badge badge text-bg-warning">15</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-envelope me-2"></i> 4 mensajes nuevos
+            <span class="float-end text-secondary fs-7">hace 3 min</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-people-fill me-2"></i> 8 solicitudes de amistad
+            <span class="float-end text-secondary fs-7">hace 12 h</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-file-earmark-fill me-2"></i> 3 informes nuevos
+            <span class="float-end text-secondary fs-7">hace 2 días</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">
+            Ver todas las notificaciones
+          </a>
+        </div>
+      </li>
+      <!--end::Notificaciones Dropdown Menu-->
+
+      <!--begin::Language Menu-->
+      <!-- Markup only: swapping the locale is the application's job. The docs
+           Recetas page shows how to wire this to a real locale switch. -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="language-menu" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Cambiar idioma; idioma actual: español">
+          <i class="bi bi-translate" aria-hidden="true"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="language-menu">
+          <li>
+            <a class="dropdown-item active" href="#" hreflang="es" aria-current="true">
+              Español
+              <i class="bi bi-check-lg ms-2" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="#" hreflang="es">Español</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="fr">Français</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="de">Deutsch</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="ar">العربية</a></li>
+        </ul>
+      </li>
+      <!--end::Language Menu-->
+
+      <!--begin::Alternar pantalla completa-->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-lte-toggle="fullscreen" aria-label="Alternar pantalla completa">
+          <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+          <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+        </a>
+      </li>
+      <!--end::Alternar pantalla completa-->
+
+      <!--begin::Selector de modo de color (#6010)-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="bd-theme" aria-label="Alternar esquema de color" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+          <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
+          <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem;">
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+              <i class="bi bi-sun-fill me-2"></i>
+              Claro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+              <i class="bi bi-moon-fill me-2"></i>
+              Oscuro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+              <i class="bi bi-circle-half me-2"></i>
+              Automático
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+        </ul>
+      </li>
+      <!--end::Selector de modo de color-->
+
+      <!--begin::User Menu Dropdown-->
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+          <img src="../assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="Alexander Pierce">
+          <span class="d-none d-md-inline">Alexander Pierce</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <!--begin::User Image-->
+          <li class="user-header text-bg-primary">
+            <img src="../assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="Alexander Pierce">
+            <p>
+              Alexander Pierce - Desarrollador web
+              <small>Miembro desde nov. de 2023</small>
+            </p>
+          </li>
+          <!--end::User Image-->
+          <!--begin::Menu Cuerpo-->
+          <li class="user-body">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-4 text-center">
+                <a href="#">Seguidores</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Ventas</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Amigos</a>
+              </div>
+            </div>
+            <!--end::Row-->
+          </li>
+          <!--end::Menu Cuerpo-->
+          <!--begin::Menú del pie de página-->
+          <li class="user-footer">
+            <a href="#" class="btn btn-outline-secondary">Perfil</a>
+            <a href="#" class="btn btn-outline-danger float-end">Cerrar sesión</a>
+          </li>
+          <!--end::Menú del pie de página-->
+        </ul>
+      </li>
+      <!--end::User Menu Dropdown-->
+    </ul>
+    <!--end::End Navbar Links-->
+  </div>
+  <!--end::Container-->
+</nav>
+<!--end::Header-->
+      <!--begin::Sidebar-->
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+  <!--begin::Sidebar Brand-->
+  <div class="sidebar-brand">
+    <!--begin::Brand Link-->
+    <a href="../index.html" class="brand-link">
+      <!--begin::Brand Image-->
+      <img src="../assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+      <!--end::Brand Image-->
+      <!--begin::Brand Text-->
+      <span class="brand-text fw-light">AdminLTE 4</span>
+      <!--end::Brand Text-->
+    </a>
+    <!--end::Brand Link-->
+  </div>
+  <!--end::Sidebar Brand-->
+  <!--begin::Búsqueda en la barra lateral-->
+  <div class="sidebar-search" role="search">
+    <label for="sidebar-search-input" class="visually-hidden">Filtrar menú</label>
+    <input type="search" id="sidebar-search-input" class="form-control form-control-sm" placeholder="Filtrar menú…" autocomplete="off" data-lte-toggle="sidebar-search" data-lte-target="#navigation">
+    <p class="fs-7 text-secondary mt-2 mb-0" data-lte-search-empty role="status" hidden>
+      No se encontraron páginas.
+    </p>
+  </div>
+  <!--end::Búsqueda en la barra lateral-->
+  <!--begin::Sidebar Wrapper-->
+  <div class="sidebar-wrapper">
+    <nav class="mt-2" aria-label="Navegación principal">
+      <!--begin::Sidebar Menu-->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="navigation">
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-speedometer"></i>
+            <p>
+              Panel
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../index.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Panel v1</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../index2.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Panel v2</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../index3.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Panel v3</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="../starter.html" class="nav-link">
+            <i class="nav-icon bi bi-file-earmark"></i>
+            <p>Página inicial</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../generate/theme.html" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Generador de temas</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-box-seam-fill"></i>
+            <p>
+              Componentes
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../widgets/small-box.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Cuadro pequeño</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../widgets/info-box.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Cuadro informativo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../widgets/cards.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Tarjetas</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../widgets/social.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Redes sociales y publicaciones</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-clipboard-fill"></i>
+            <p>
+              Opciones de diseño
+              <span class="nav-badge badge text-bg-secondary me-3">12</span>
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../layout/unfixed-sidebar.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral predeterminada</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/fixed-sidebar.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral fija</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/fixed-header.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Encabezado fijo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/fixed-footer.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Pie de página fijo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/fixed-complete.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Diseño completamente fijo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/layout-custom-area.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Diseño <small>+ Área personalizada </small></p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/sidebar-mini.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral compacta</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/collapsed-sidebar.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral compacta <small>+ Contraída</small></p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/collapsed-sidebar-without-hover.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral compacta <small>+ Contraída + Sin efecto al pasar el cursor</small></p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/logo-switch.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral compacta <small>+ Cambio de logotipo</small></p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/top-nav.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Navegación superior <small>+ Sin barra lateral</small></p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../layout/layout-rtl.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Diseño RTL</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-tree-fill"></i>
+            <p>
+              UI Elementos
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../UI/general.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>General</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../UI/icons.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Iconos</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../UI/timeline.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Cronología</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../UI/ribbons.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Cintas</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../UI/colors.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Colores</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-envelope"></i>
+            <p>
+              Buzón
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../mailbox/inbox.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Bandeja de entrada</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../mailbox/read.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Leer mensaje</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../mailbox/compose.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Redactar</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-pencil-square"></i>
+            <p>
+              Forms
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../forms/elements.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Elementos</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../forms/layout.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Diseño</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../forms/validation.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Validación</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../forms/wizard.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Asistente</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../forms/advanced.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Elementos avanzados</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../forms/editors.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Editores</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-table"></i>
+            <p>
+              Tables
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../tables/simple.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Tablas simples</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../tables/data.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Tablas de datos</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-graph-up"></i>
+            <p>
+              Charts
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../charts/apexcharts.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>ApexCharts</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-header">PÁGINAS</li>
+        <li class="nav-item menu-open">
+          <a href="#" class="nav-link active">
+            <i class="nav-icon bi bi-file-earmark-text"></i>
+            <p>
+              Pages
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../pages/profile.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Perfil</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/settings.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Configuración</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/invoice.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Factura</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/calendar.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Calendario</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/kanban.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Kanban</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/chat.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Chat</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/file-manager.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Administrador de archivos</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/projects.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Proyectos</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/gallery.html" class="nav-link active">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Galería</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/search-results.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Resultados de búsqueda</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/pricing.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Precios</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../pages/faq.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Preguntas frecuentes</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>
+                  Error
+                  <i class="nav-arrow bi bi-chevron-right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../pages/404.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>404</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../pages/500.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>500</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../pages/maintenance.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>Mantenimiento</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="../users.html" class="nav-link">
+            <i class="nav-icon bi bi-people"></i>
+            <p>Usuarios</p>
+          </a>
+        </li>
+
+        <li class="nav-header">EJEMPLOS</li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-box-arrow-in-right"></i>
+            <p>
+              Auth
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                <p>
+                  Version 1
+                  <i class="nav-arrow bi bi-chevron-right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../examples/login.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>Iniciar sesión</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../examples/register.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>Registrarse</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../examples/forgot-password.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>Olvidé mi contraseña</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-box-arrow-in-right"></i>
+                <p>
+                  Version 2
+                  <i class="nav-arrow bi bi-chevron-right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="../examples/login-v2.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>Iniciar sesión</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="../examples/register-v2.html" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>Registrarse</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="../examples/lockscreen.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Pantalla de bloqueo</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+
+        <li class="nav-header">EJEMPLO MULTINIVEL</li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>Nivel 1</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>
+              Nivel 1
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Nivel 2</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>
+                  Nivel 2
+                  <i class="nav-arrow bi bi-chevron-right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon bi bi-record-circle-fill"></i>
+                    <p>Nivel 3</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon bi bi-record-circle-fill"></i>
+                    <p>Nivel 3</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon bi bi-record-circle-fill"></i>
+                    <p>Nivel 3</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Nivel 2</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>Nivel 1</p>
+          </a>
+        </li>
+
+        <li class="nav-header">ETIQUETAS</li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle text-danger"></i>
+            <p class="text">Importante</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle text-warning"></i>
+            <p>Advertencia</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle text-info"></i>
+            <p>Informativo</p>
+          </a>
+        </li>
+      </ul>
+      <!--end::Sidebar Menu-->
+
+      <!-- Docs CTA (bottom of sidebar) -->
+      <div class="p-3 mt-3 border-top border-secondary border-opacity-25">
+        <a href="../docs/introduction.html" class="btn btn-sm btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-book" aria-hidden="true"></i>
+          Ver documentation
+        </a>
+      </div>
+    </nav>
+  </div>
+  <!--end::Sidebar Wrapper-->
+</aside>
+<!--end::Sidebar-->
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="mb-0 fs-3">Galería</h1>
+              </div>
+              <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Galería
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Card-->
+            <div class="card">
+              <!--begin::Card Header-->
+              <div class="card-header d-flex flex-wrap align-items-center gap-2">
+                <div class="card-title">Biblioteca multimedia</div>
+                <div class="card-tools">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Filter by category" id="gallery-filters">
+                    <button type="button" class="btn btn-primary" data-gallery-filter="all" aria-pressed="true">
+                          All
+                        </button><button type="button" class="btn btn-outline-primary" data-gallery-filter="places" aria-pressed="false">
+                          Places
+                        </button><button type="button" class="btn btn-outline-primary" data-gallery-filter="products" aria-pressed="false">
+                          Productos
+                        </button><button type="button" class="btn btn-outline-primary" data-gallery-filter="interiors" aria-pressed="false">
+                          Interiors
+                        </button><button type="button" class="btn btn-outline-primary" data-gallery-filter="people" aria-pressed="false">
+                          People
+                        </button>
+                  </div>
+                </div>
+              </div>
+              <!--end::Card Header-->
+              <!--begin::Card Cuerpo-->
+              <div class="card-body">
+                <!--begin::Galería Grid-->
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xxl-4 g-3" id="gallery-grid">
+                  <div class="col" data-gallery-item="places">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo1.png" alt="Old town at dusk" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Old town at dusk
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">4.2 MB · 3840×2160</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Old town at dusk">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="products">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/prod-1.jpg" alt="Trail boot, three-quarter" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Trail boot, three-quarter
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">1.1 MB · 1600×1600</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Trail boot, three-quarter">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="people">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo3.jpg" alt="Reading by lamplight" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Reading by lamplight
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">3.8 MB · 3200×2133</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Reading by lamplight">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="products">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/prod-2.jpg" alt="Trail boot, profile" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Trail boot, profile
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">980 KB · 1600×1600</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Trail boot, profile">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="interiors">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo2.png" alt="Dining area, morning" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Dining area, morning
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">2.6 MB · 2560×1707</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Dining area, morning">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="products">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/prod-3.jpg" alt="Trail boot, outsole" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Trail boot, outsole
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">1.4 MB · 1600×1600</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Trail boot, outsole">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="places">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo4.jpg" alt="Canal at first light" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Canal at first light
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">3.1 MB · 3000×2000</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Canal at first light">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="products">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/prod-4.jpg" alt="Trail boot, heel detail" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Trail boot, heel detail
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">1.2 MB · 1600×1600</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Trail boot, heel detail">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="interiors">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo2.png" alt="Dining area, wide" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Dining area, wide
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">2.6 MB · 2560×1707</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Dining area, wide">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="products">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/prod-5.jpg" alt="Trail boot, upper" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Trail boot, upper
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">1.0 MB · 1600×1600</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Trail boot, upper">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="places">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo1.png" alt="Narrow street" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Narrow street
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">4.2 MB · 3840×2160</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Narrow street">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div><div class="col" data-gallery-item="places">
+                        <figure class="card h-100 mb-0">
+                          <div class="ratio ratio-4x3">
+                            <img src="../assets/img/photo4.jpg" alt="Canal, long exposure" class="card-img-top object-fit-cover" loading="lazy">
+                          </div>
+                          <figcaption class="card-body d-flex align-items-start gap-2 py-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                              <p class="fw-semibold mb-0 text-truncate">
+                                Canal, long exposure
+                              </p>
+                              <p class="fs-7 text-secondary mb-0">3.1 MB · 3000×2000</p>
+                            </div>
+                            <div class="dropdown flex-shrink-0">
+                              <button class="btn btn-tool" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Acciones for Canal, long exposure">
+                                <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                              </button>
+                              <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                  <a class="dropdown-item" href="#">Descargar</a>
+                                </li>
+                                <li>
+                                  <a class="dropdown-item" href="#">Cambiar nombre</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                  <a class="dropdown-item text-danger" href="#">
+                                    Eliminar
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </figcaption>
+                        </figure>
+                      </div>
+                </div>
+                <!--end::Galería Grid-->
+                <!--begin::Empty State-->
+                <p class="text-secondary text-center my-5" id="gallery-empty" role="status" hidden>
+                  Todavía no hay elementos en esta categoría.
+                </p>
+                <!--end::Empty State-->
+              </div>
+              <!--end::Card Cuerpo-->
+              <!--begin::Card Pie de página-->
+              <div class="card-footer d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <span class="fs-7 text-body-secondary" id="gallery-count" aria-live="polite">
+                  Showing 12 of 12 items
+                </span>
+                <button type="button" class="btn btn-sm btn-primary">
+                  <i class="bi bi-upload me-1" aria-hidden="true"></i> Subir
+                </button>
+              </div>
+              <!--end::Card Pie de página-->
+            </div>
+            <!--end::Card-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <!--begin::Pie de página-->
+<footer class="app-footer">
+  <!--begin::To the end-->
+  <div class="float-end d-none d-sm-inline">Tu panel de administración</div>
+  <!--end::To the end-->
+  <!--begin::Copyright-->
+  <strong>
+    Derechos de autor &copy; 2014-2026&nbsp;
+    <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+  </strong>
+  Todos los derechos reservados.
+  <!--end::Copyright-->
+</footer>
+<!--end::Pie de página-->
+    </div>
+    <!--end::App Wrapper-->
+    <!--begin::Script-->
+    <!--begin::Complemento de terceros (OverlayScrollbars)-->
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento de terceros (OverlayScrollbars)--><!--begin::Complemento requerido (popperjs for Bootstrap 5)-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento requerido (popperjs for Bootstrap 5)--><!--begin::Complemento requerido (Bootstrap 5)-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento requerido (Bootstrap 5)--><!--begin::Complemento requerido (AdminLTE)-->
+<script src="../js/adminlte.js"></script>
+<!--end::Complemento requerido (AdminLTE)-->
+<!--begin::OverlayScrollbars Configure-->
+<script>
+const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper"
+const Default = {
+  scrollbarTheme: "os-theme-light",
+  scrollbarAutoHide: "leave",
+  scrollbarClickScroll: true
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER)
+  
+  // Disable OverlayScrollbars on mobile devices to prevent touch interference
+  const isMobile = window.innerWidth <= 992
+  
+  if (
+    sidebarWrapper &&
+    OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined &&
+    !isMobile
+  ) {
+    OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+      scrollbars: {
+        theme: Default.scrollbarTheme,
+        autoHide: Default.scrollbarAutoHide,
+        clickScroll: Default.scrollbarClickScroll
+      }
+    })
+  }
+})
+</script>
+<!--end::OverlayScrollbars Configure-->
+<!--begin::Gráficos según el modo de color-->
+<script>
+  // ApexCharts draws light-theme tooltips and axis text unless told otherwise,
+  // which is unreadable in dark mode (#6105). Give it the page's colour mode as
+  // a valor global predeterminado before any chart is created — this runs before the chart
+  // pages' own scripts — and mantener sincronizados todos los gráficos que tengan un `chart.id` in step
+  // cuando cambie el modo (ColorMode, the OS in auto mode, or código propio).
+  ;(() => {
+    "use strict"
+    const mode = () => (document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light")
+    // `Apex` is ApexCharts' global-options object; it must exist antes de cargar la biblioteca.
+    // theme.mode also sets a dark chart background — keep the card's instead.
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment
+    globalThis.Apex ||= {}
+    const apex = globalThis.Apex
+    apex.theme = { mode: mode() }
+    apex.chart = Object.assign(apex.chart || {}, { background: "transparent" })
+    new MutationObserver(() => {
+      const next = mode()
+      apex.theme = { mode: next }
+      const instances = apex._chartInstances || []
+      for (const { chart } of instances) {
+        chart.updateOptions({ theme: { mode: next } }, false, false)
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-bs-theme"] })
+  })()
+</script>
+<!--end::Gráficos según el modo de color-->
+
+
+<!--begin::Selector de modo de color-->
+<!-- The selector claro/oscuro/automático incluido in adminlte.js as the ColorMode
+     module (since 4.1) — no se necesita un script en la página. Only the no-flash snippet
+     in <head> stays inline, because it must run before first paint. -->
+<!--end::Selector de modo de color-->
+
+
+    <!--begin::Galería Filter-->
+    <script>
+const galleryFilters = document.getElementById("gallery-filters")
+const galleryGrid = document.getElementById("gallery-grid")
+const galleryEmpty = document.getElementById("gallery-empty")
+const galleryCount = document.getElementById("gallery-count")
+
+if (galleryFilters && galleryGrid) {
+  const tiles = galleryGrid.querySelectorAll("[data-gallery-item]")
+
+  galleryFilters.addEventListener("click", event => {
+    const button = event.target.closest("[data-gallery-filter]")
+    if (!button) {
+      return
+    }
+
+    const category = button.dataset.galleryFilter
+    let shown = 0
+
+    tiles.forEach(tile => {
+      const match = category === "all" || tile.dataset.galleryItem === category
+      tile.hidden = !match
+      if (match) {
+        shown++
+      }
+    })
+
+    galleryFilters.querySelectorAll("[data-gallery-filter]").forEach(other => {
+      const active = other === button
+      other.classList.toggle("btn-primary", active)
+      other.classList.toggle("btn-outline-primary", !active)
+      other.setAttribute("aria-pressed", String(active))
+    })
+
+    galleryEmpty.hidden = shown > 0
+    galleryCount.textContent = `Showing ${shown} of ${tiles.length} items`
+  })
+}
+    </script><!--end::Galería Filter-->
+    <!--end::Script-->
+  </body><!--end::Cuerpo-->
+</html>

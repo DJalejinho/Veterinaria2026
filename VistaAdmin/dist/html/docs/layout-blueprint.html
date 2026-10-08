@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Esquema de diseño | AdminLTE 4</title>
+
+<!--begin::Theme Init (prevents flash of incorrect theme on load, #6043)-->
+<script>
+  ;(() => {
+    "use strict"
+    const root = document.documentElement
+
+    // Applications with their own theming opt out of AdminLTE's color mode
+    // entirely, here as well as in the bundle.
+    if (root.getAttribute("data-lte-color-mode") === "off") {
+      return
+    }
+
+    const STORAGE_KEY = "lte-theme"
+    let stored = null
+    try {
+      stored = localStorage.getItem(STORAGE_KEY)
+    } catch {
+      // localStorage may be unavailable (private mode, sandboxed iframe).
+    }
+    // Mirror the precedence in color-mode.ts: the visitor's stored choice
+    // wins, then a theme this page declared itself, then the OS preference.
+    const authored = root.getAttribute("data-bs-theme")
+    let resolved = "light"
+    if (stored === "dark" || stored === "light") {
+      resolved = stored
+    } else if (authored === "dark" || authored === "light") {
+      resolved = authored
+    } else if (globalThis.matchMedia("(prefers-color-scheme: dark)").matches) {
+      resolved = "dark"
+    }
+    root.setAttribute("data-bs-theme", resolved)
+    root.style.colorScheme = resolved
+    // Flag values computed here, so the bundle does not mistake them for a
+    // theme the page declared and stop following the OS preference.
+    if (resolved !== authored) {
+      root.setAttribute("data-lte-theme-resolved", "")
+    }
+  })()
+</script>
+<!--end::Theme Init-->
+
+<!--begin::Accesibilidad Meta Tags-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<!--end::Accesibilidad Meta Tags-->
+
+<!--begin::Primary Meta Tags-->
+<meta name="title" content="Esquema de diseño | AdminLTE 4">
+<meta name="author" content="ColorlibHQ">
+<meta name="description" content="AdminLTE es una plantilla gratuita de panel de administración para Bootstrap 5, con casi 50 páginas de ejemplo, creada con JavaScript vanilla y diseñada teniendo en cuenta la accesibilidad.">
+<meta name="keywords" content="bootstrap 5, bootstrap, bootstrap 5 admin dashboard, bootstrap 5 dashboard, bootstrap 5 charts, bootstrap 5 calendar, bootstrap 5 datepicker, bootstrap 5 tables, bootstrap 5 datatable, vanilla js datatable, colorlibhq, colorlibhq dashboard, colorlibhq admin dashboard, accessible admin panel">
+<!--end::Primary Meta Tags-->
+
+<!--begin::Accesibilidad Características-->
+<!-- Skip links will be dynamically added by accessibility.js -->
+<meta name="supported-color-schemes" content="light dark">
+<link rel="preload" href="../css/adminlte.css" as="style">
+<!--end::Accesibilidad Características-->
+
+<!--begin::Fonts-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css" integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" media="print" onload="this.media='all'">
+<!--end::Fonts-->
+
+<!--begin::Complemento de terceros (OverlayScrollbars)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" crossorigin="anonymous">
+<!--end::Complemento de terceros (OverlayScrollbars)-->
+
+<!--begin::Complemento de terceros (Bootstrap Icons)-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+<!--end::Complemento de terceros (Bootstrap Icons)-->
+
+<!--begin::Complemento requerido (AdminLTE)-->
+<link rel="stylesheet" href="../css/adminlte.css">
+<!--end::Complemento requerido (AdminLTE)-->
+<link rel="stylesheet" href="../css/adminlte-docs.css">
+
+
+<!--email_off-->
+  </head>
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary docs-page">
+    <div class="app-wrapper">
+      <!--begin::Header-->
+<nav class="app-header navbar navbar-expand bg-body">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Start Navbar Links-->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
+        </a>
+      </li>
+      
+          <li class="nav-item d-none d-md-block">
+            <a href="../docs/introduction.html" class="nav-link">
+              <i class="bi bi-book me-1" aria-hidden="true"></i>
+              Documentación
+            </a>
+          </li>
+          <li class="nav-item d-none d-md-block">
+            <a href="../index.html" class="nav-link">
+              <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
+              Volver a la vista previa
+            </a>
+          </li>
+        
+    </ul>
+    <!--end::Start Navbar Links-->
+
+    <!--begin::Navbar Buscar-->
+    <form class="navbar-search d-none d-md-block ms-3" role="search" action="../pages/search-results.html">
+      <label for="navbar-search-input" class="visually-hidden">Buscar</label>
+      <div class="navbar-search-field">
+        <input type="search" id="navbar-search-input" name="q" class="form-control" placeholder="Buscar…" autocomplete="off">
+        <button class="navbar-search-submit" type="submit" aria-label="Enviar búsqueda">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <!--end::Navbar Buscar-->
+
+    <!--begin::End Navbar Links-->
+    <ul class="navbar-nav ms-auto">
+      <!--begin::Buscar (pantallas pequeñas: el campo anterior se oculta, así que enlaza a la página de búsqueda)-->
+      <li class="nav-item d-md-none">
+        <a class="nav-link" href="../pages/search-results.html" aria-label="Buscar">
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </a>
+      </li>
+      <!--end::Buscar-->
+      <!--begin::Mensajes Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-label="Mensajes: 3 sin leer">
+          <i class="bi bi-chat-text"></i>
+          <span class="navbar-badge badge text-bg-danger">3</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user1-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Brad Diesel
+                  <span class="float-end fs-7 text-danger"><i class="bi bi-star-fill"></i></span>
+                </p>
+                <p class="fs-7">Llámame cuando puedas...</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user8-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  John Pierce
+                  <span class="float-end fs-7 text-secondary">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">Ya recibí tu mensaje</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img src="../assets/img/user3-128x128.jpg" alt="" class="img-size-50 rounded-circle me-3">
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Nora Silvester
+                  <span class="float-end fs-7 text-warning">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">El asunto va aquí</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">Ver todos los mensajes</a>
+        </div>
+      </li>
+      <!--end::Mensajes Dropdown Menu-->
+
+      <!--begin::Notificaciones Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-label="Notificaciones: 15 unread">
+          <i class="bi bi-bell-fill"></i>
+          <span class="navbar-badge badge text-bg-warning">15</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-envelope me-2"></i> 4 mensajes nuevos
+            <span class="float-end text-secondary fs-7">hace 3 min</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-people-fill me-2"></i> 8 solicitudes de amistad
+            <span class="float-end text-secondary fs-7">hace 12 h</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-file-earmark-fill me-2"></i> 3 informes nuevos
+            <span class="float-end text-secondary fs-7">hace 2 días</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">
+            Ver todas las notificaciones
+          </a>
+        </div>
+      </li>
+      <!--end::Notificaciones Dropdown Menu-->
+
+      <!--begin::Language Menu-->
+      <!-- Markup only: swapping the locale is the application's job. The docs
+           Recetas page shows how to wire this to a real locale switch. -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="language-menu" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Cambiar idioma; idioma actual: español">
+          <i class="bi bi-translate" aria-hidden="true"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="language-menu">
+          <li>
+            <a class="dropdown-item active" href="#" hreflang="es" aria-current="true">
+              Español
+              <i class="bi bi-check-lg ms-2" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="#" hreflang="es">Español</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="fr">Français</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="de">Deutsch</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="ar">العربية</a></li>
+        </ul>
+      </li>
+      <!--end::Language Menu-->
+
+      <!--begin::Alternar pantalla completa-->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-lte-toggle="fullscreen" aria-label="Alternar pantalla completa">
+          <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+          <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+        </a>
+      </li>
+      <!--end::Alternar pantalla completa-->
+
+      <!--begin::Selector de modo de color (#6010)-->
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="bd-theme" aria-label="Alternar esquema de color" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+          <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
+          <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme" style="--bs-dropdown-min-width: 8rem;">
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+              <i class="bi bi-sun-fill me-2"></i>
+              Claro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+              <i class="bi bi-moon-fill me-2"></i>
+              Oscuro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+              <i class="bi bi-circle-half me-2"></i>
+              Automático
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+        </ul>
+      </li>
+      <!--end::Selector de modo de color-->
+
+      <!--begin::User Menu Dropdown-->
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+          <img src="../assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="Alexander Pierce">
+          <span class="d-none d-md-inline">Alexander Pierce</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <!--begin::User Image-->
+          <li class="user-header text-bg-primary">
+            <img src="../assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="Alexander Pierce">
+            <p>
+              Alexander Pierce - Desarrollador web
+              <small>Miembro desde nov. de 2023</small>
+            </p>
+          </li>
+          <!--end::User Image-->
+          <!--begin::Menu Cuerpo-->
+          <li class="user-body">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-4 text-center">
+                <a href="#">Seguidores</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Ventas</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Amigos</a>
+              </div>
+            </div>
+            <!--end::Row-->
+          </li>
+          <!--end::Menu Cuerpo-->
+          <!--begin::Menú del pie de página-->
+          <li class="user-footer">
+            <a href="#" class="btn btn-outline-secondary">Perfil</a>
+            <a href="#" class="btn btn-outline-danger float-end">Cerrar sesión</a>
+          </li>
+          <!--end::Menú del pie de página-->
+        </ul>
+      </li>
+      <!--end::User Menu Dropdown-->
+    </ul>
+    <!--end::End Navbar Links-->
+  </div>
+  <!--end::Container-->
+</nav>
+<!--end::Header-->
+      <!--begin::Sidebar (docs mode)-->
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+  <!--begin::Sidebar Brand-->
+  <div class="sidebar-brand">
+    <a href="../docs/introduction.html" class="brand-link">
+      <img src="../assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+      <span class="brand-text fw-light">
+        AdminLTE 4 <span class="opacity-75">&middot; Docs</span>
+      </span>
+    </a>
+  </div>
+  <!--end::Sidebar Brand-->
+  <!--begin::Búsqueda en la barra lateral-->
+  <div class="sidebar-search" role="search">
+    <label for="sidebar-search-input" class="visually-hidden">Filtrar documentación</label>
+    <input type="search" id="sidebar-search-input" class="form-control form-control-sm" placeholder="Filtrar documentación…" autocomplete="off" data-lte-toggle="sidebar-search" data-lte-target="#docs-navigation">
+    <p class="fs-7 text-secondary mt-2 mb-0" data-lte-search-empty role="status" hidden>
+      No hay páginas que coincidan.
+    </p>
+  </div>
+  <!--end::Búsqueda en la barra lateral-->
+  <!--begin::Sidebar Wrapper-->
+  <div class="sidebar-wrapper">
+    <nav class="mt-2" aria-label="Documentation navigation">
+      <!--begin::Sidebar Menu-->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="docs-navigation">
+        <li class="nav-header">COMIENZA AQUÍ</li>
+        <li class="nav-item">
+          <a href="../docs/introduction.html" class="nav-link">
+            <i class="nav-icon bi bi-download"></i>
+            <p>Instalación</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/getting-started.html" class="nav-link">
+            <i class="nav-icon bi bi-rocket-takeoff"></i>
+            <p>Primeros pasos</p>
+          </a>
+        </li>
+
+        <li class="nav-header">FUNDAMENTOS</li>
+        <li class="nav-item">
+          <a href="../docs/layout.html" class="nav-link">
+            <i class="nav-icon bi bi-grip-horizontal"></i>
+            <p>Clases de diseño</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/layout-blueprint.html" class="nav-link active">
+            <i class="nav-icon bi bi-diagram-3"></i>
+            <p>Esquema de diseño</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/customization.html" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Personalización</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/color-mode.html" class="nav-link">
+            <i class="nav-icon bi bi-star-half"></i>
+            <p>Modo de color</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/colors.html" class="nav-link">
+            <i class="nav-icon bi bi-palette"></i>
+            <p>Colores</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/rtl.html" class="nav-link">
+            <i class="nav-icon bi bi-text-paragraph"></i>
+            <p>Compatibilidad con RTL</p>
+          </a>
+        </li>
+
+        <li class="nav-header">DESARROLLO</li>
+        <li class="nav-item">
+          <a href="../docs/recipes.html" class="nav-link">
+            <i class="nav-icon bi bi-clipboard-check"></i>
+            <p>Recetas</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-ui-checks-grid"></i>
+            <p>
+              Components
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../docs/components/main-header.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Encabezado principal</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/components/main-sidebar.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Barra lateral principal</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/components/card.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Card</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/components/miscellaneous.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Varios</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-filetype-js"></i>
+            <p>
+              JavaScript Plugins
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="../docs/javascript/plugins-overview.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Resumen</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/layout.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Diseño</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/pushmenu.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Menú lateral</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/treeview.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Treeview</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/card-widget.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Widget de tarjeta</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/direct-chat.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Chat directo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/fullscreen.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Pantalla completa</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/sidebar-search.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Búsqueda en la barra lateral</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="../docs/javascript/accessibility.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Accesibilidad</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/integrations.html" class="nav-link">
+            <i class="nav-icon bi bi-puzzle"></i>
+            <p>Integraciones</p>
+          </a>
+        </li>
+
+        <li class="nav-header">PUBLICACIÓN</li>
+        <li class="nav-item">
+          <a href="../docs/migration.html" class="nav-link">
+            <i class="nav-icon bi bi-arrow-up-right-square"></i>
+            <p>Migración desde v3</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/deployment.html" class="nav-link">
+            <i class="nav-icon bi bi-cloud-upload"></i>
+            <p>Implementación</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/browser-support.html" class="nav-link">
+            <i class="nav-icon bi bi-browser-chrome"></i>
+            <p>Compatibilidad con navegadores</p>
+          </a>
+        </li>
+
+        <li class="nav-header">RECURSOS</li>
+        <li class="nav-item">
+          <a href="../docs/faq.html" class="nav-link">
+            <i class="nav-icon bi bi-question-circle"></i>
+            <p>Preguntas frecuentes</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/how-to-contribute.html" class="nav-link">
+            <i class="nav-icon bi bi-people"></i>
+            <p>Colaborar</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="../docs/license.html" class="nav-link">
+            <i class="nav-icon bi bi-patch-check"></i>
+            <p>Licencia</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="https://github.com/ColorlibHQ/AdminLTE" target="_blank" rel="noopener" class="nav-link">
+            <i class="nav-icon bi bi-github"></i>
+            <p>
+              GitHub
+              <i class="bi bi-box-arrow-up-right ms-1" aria-hidden="true"></i>
+            </p>
+          </a>
+        </li>
+      </ul>
+      <!--end::Sidebar Menu-->
+
+      <!-- Back to preview CTA (bottom of sidebar) -->
+      <div class="p-3 mt-3 border-top border-secondary border-opacity-25">
+        <a href="../index.html" class="btn btn-sm btn-outline-light w-100 d-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i>
+          Back to live preview
+        </a>
+      </div>
+    </nav>
+  </div>
+  <!--end::Sidebar Wrapper-->
+</aside>
+<!--end::Sidebar (docs mode)-->
+      <main class="app-main">
+        <div class="app-content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="mb-0 fs-3">Esquema de diseño</h1>
+              </div>
+              <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Documentación</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Esquema de diseño
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <p>Todas las páginas de AdminLTE siguen la misma estructura: un contenedor con encabezado, barra lateral, área de contenido principal y, opcionalmente, pie de página. Comprender las clases de estas cuatro regiones permite aprovechar el framework y evita luchar contra su estructura.</p>
+<h5 id="las-cuatro-regiones">Las cuatro regiones</h5>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="text"><code><span class="line"><span>┌──────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  .app-wrapper                            │</span></span>
+<span class="line"><span>│  ┌────────────────────────────────────┐  │</span></span>
+<span class="line"><span>│  │  .app-header                       │  │ ← topbar / navbar</span></span>
+<span class="line"><span>│  ├──────────┬─────────────────────────┤  │</span></span>
+<span class="line"><span>│  │          │                         │  │</span></span>
+<span class="line"><span>│  │  .app-   │   .app-main             │  │ ← page content</span></span>
+<span class="line"><span>│  │ sidebar  │                         │  │</span></span>
+<span class="line"><span>│  │          │                         │  │</span></span>
+<span class="line"><span>│  ├──────────┴─────────────────────────┤  │</span></span>
+<span class="line"><span>│  │  .app-footer (opcional)            │  │</span></span>
+<span class="line"><span>│  └────────────────────────────────────┘  │</span></span>
+<span class="line"><span>└──────────────────────────────────────────┘</span></span></code></pre>
+<p>El contenedor usa CSS Grid y sus cuatro elementos secundarios ocupan áreas de la cuadrícula. No necesitas conocer esos detalles para usarlo: basta con seguir el patrón de marcado.</p>
+<h5 id="marcado-mínimo">Marcado mínimo</h5>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">body</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;layout-fixed sidebar-expand-lg bg-body-tertiary&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-wrapper&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">nav</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-header navbar navbar-expand bg-body&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">…</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">nav</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">aside</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-sidebar bg-body-secondary shadow&quot;</span><span style="color:#9CDCFE"> data-bs-theme</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dark&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">…</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">aside</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">main</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-main&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">…</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">main</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">footer</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-footer&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">…</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">footer</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">body</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>El orden dentro de <code>.app-wrapper</code> no importa: la plantilla de grid ubica cada elemento según su clase. Elige el orden que resulte más claro.</p>
+<h5 id="referencia-de-regiones">Referencia de regiones</h5>
+<h6 id="app-wrapper"><code>.app-wrapper</code></h6>
+<p>Contenedor raíz. Define la plantilla de grid que ubica el encabezado, la barra lateral, el contenido principal y el pie de página. Siempre va directamente dentro de <code>&lt;body&gt;</code>.</p>
+<p>Puedes agregar <code>.compact-mode</code> aquí (o en cualquier elemento superior) para reducir el espaciado de todo el diseño; es útil en paneles con muchos datos.</p>
+<h6 id="app-header"><code>.app-header</code></h6>
+<p>Barra superior. Usa las clases navbar de Bootstrap (<code>navbar navbar-expand bg-body</code>) para aplicar los estilos. El encabezado contiene el botón que controla la barra lateral; configúralo con <code>data-lte-toggle=&quot;sidebar&quot;</code>:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav-link&quot;</span><span style="color:#9CDCFE"> data-lte-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;sidebar&quot;</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;#&quot;</span><span style="color:#9CDCFE"> role</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;button&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">i</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;bi bi-list&quot;</span><span style="color:#808080">&gt;&lt;/</span><span style="color:#569CD6">i</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>De forma predeterminada, el encabezado se desplaza con la página. Agrega <code>.fixed-header</code> a <code>&lt;body&gt;</code> para fijarlo.</p>
+<h6 id="app-sidebar"><code>.app-sidebar</code></h6>
+<p>Barra lateral. Siempre contiene dos elementos secundarios: <code>.sidebar-brand</code> (logotipo / nombre de la aplicación) y <code>.sidebar-wrapper</code> (la región de navegación desplazable).</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">aside</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-sidebar bg-body-secondary shadow&quot;</span><span style="color:#9CDCFE"> data-bs-theme</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;dark&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;sidebar-brand&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">a</span><span style="color:#9CDCFE"> href</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;/&quot;</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;brand-link&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">span</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;brand-text fw-light&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Mi panel</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">span</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">a</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;sidebar-wrapper&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;</span><span style="color:#569CD6">nav</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;mt-2&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;</span><span style="color:#569CD6">ul</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;nav sidebar-menu flex-column&quot;</span><span style="color:#9CDCFE"> data-lte-toggle</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;treeview&quot;</span><span style="color:#9CDCFE"> role</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;menu&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">        &lt;!-- elementos de navegación --&gt;</span></span>
+<span class="line"><span style="color:#808080">      &lt;/</span><span style="color:#569CD6">ul</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">    &lt;/</span><span style="color:#569CD6">nav</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">aside</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>El <code>data-bs-theme=&quot;dark&quot;</code> en la barra lateral produce el aspecto de barra oscura sobre página clara de las demostraciones. Quítalo para obtener una barra lateral clara.</p>
+<h6 id="app-main"><code>.app-main</code></h6>
+<p>Región de contenido de la página. Casi siempre contiene dos elementos secundarios:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">main</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-main&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-content-header&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">    &lt;!-- título de página y ruta de navegación --&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-content&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#6A9955">    &lt;!-- contenido de la página: tarjetas, tablas, gráficos, etc. --&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">main</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p><code>.app-content-header</code> es la franja del título, normalmente un <code>&lt;h3&gt;</code> y una ruta de navegación en la misma fila. <code>.app-content</code> contiene todo lo que aparece debajo. Ambos deberían envolver sus elementos con <code>.container-fluid</code> (o <code>.container</code> para limitar el ancho).</p>
+<h6 id="app-footer-opcional"><code>.app-footer</code> (opcional)</h6>
+<p>Franja de pie de página en la parte inferior del contenedor:</p>
+<pre class="astro-code dark-plus" style="background-color:#1E1E1E;color:#D4D4D4;overflow-x:auto" tabindex="0" data-language="html"><code><span class="line"><span style="color:#808080">&lt;</span><span style="color:#569CD6">footer</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;app-footer&quot;</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">div</span><span style="color:#9CDCFE"> class</span><span style="color:#D4D4D4">=</span><span style="color:#CE9178">&quot;float-end d-none d-sm-inline&quot;</span><span style="color:#808080">&gt;</span><span style="color:#D4D4D4">Versión 4.0.0</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">div</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">  &lt;</span><span style="color:#569CD6">strong</span><span style="color:#808080">&gt;</span><span style="color:#569CD6">&amp;copy;</span><span style="color:#D4D4D4"> 2026 Tu empresa</span><span style="color:#808080">&lt;/</span><span style="color:#569CD6">strong</span><span style="color:#808080">&gt;</span></span>
+<span class="line"><span style="color:#808080">&lt;/</span><span style="color:#569CD6">footer</span><span style="color:#808080">&gt;</span></span></code></pre>
+<p>Agrega <code>.fixed-footer</code> a <code>&lt;body&gt;</code> para fijarlo en la parte inferior de la ventana.</p>
+<h5 id="modificadores-de-diseño-aplicados-al-body">Modificadores de diseño aplicados al body</h5>
+<p>El comportamiento del diseño se controla principalmente mediante clases en <code>&lt;body&gt;</code>, y no en <code>.app-wrapper</code>. Modificadores disponibles:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-responsive" tabindex="0"><table><thead><tr><th>Clase</th><th>Función</th></tr></thead><tbody><tr><td><code>layout-fixed</code></td><td>La barra lateral tiene su propia barra de desplazamiento; solo <code>.app-main</code> se desplaza con la página</td></tr><tr><td><code>fixed-header</code></td><td>Fija <code>.app-header</code> en la parte superior; desde v4.0.0 también fija la barra lateral</td></tr><tr><td><code>fixed-footer</code></td><td>Fija <code>.app-footer</code> en la parte inferior</td></tr><tr><td><code>sidebar-expand-{sm,md,lg,xl,xxl}</code></td><td>Punto de interrupción en el que la barra lateral pasa de estar fuera del lienzo (móvil) a mostrarse en línea (escritorio). <code>lg</code> es el valor predeterminado en las demostraciones.</td></tr><tr><td><code>sidebar-mini</code></td><td>Contrae la barra lateral y deja solo los iconos</td></tr><tr><td><code>sidebar-mini sidebar-collapse</code></td><td>Inicia la página con la barra lateral mini contraída</td></tr><tr><td><code>sidebar-without-hover</code></td><td>Desactiva la expansión automática al pasar el cursor sobre la barra lateral mini</td></tr><tr><td><code>layout-rtl</code></td><td>Invierte el diseño para idiomas de derecha a izquierda (también requiere <code>.rtl.css</code> y <code>dir=&quot;rtl&quot;</code>; consulta <a href="rtl.html">Compatibilidad con RTL</a>)</td></tr></tbody></table></div>
+<p>Estas opciones se pueden combinar. Los paneles de demostración usan <code>class=&quot;layout-fixed sidebar-expand-lg bg-body-tertiary&quot;</code>; fija la barra lateral y establece su punto de interrupción de escritorio en <code>lg</code> (≥992px).</p>
+<h6 id="demostraciones-de-variantes-del-diseño">Demostraciones de variantes del diseño</h6>
+<p>La sección Diseño del sitio de demostración incluye once combinaciones prediseñadas:</p>
+<ul>
+<li><a href="../layout/fixed-sidebar.html">Barra lateral fija</a>, <a href="../layout/fixed-header.html">Encabezado fijo</a>, <a href="../layout/fixed-footer.html">Pie de página fijo</a>, <a href="../layout/fixed-complete.html">Diseño completamente fijo</a></li>
+<li><a href="../layout/unfixed-sidebar.html">Barra lateral sin fijar</a>, <a href="../layout/sidebar-mini.html">Barra lateral compacta</a>, <a href="../layout/collapsed-sidebar.html">Barra lateral contraída</a>, <a href="../layout/collapsed-sidebar-without-hover.html">Contraída sin expansión al pasar el cursor</a></li>
+<li><a href="../layout/layout-custom-area.html">Área personalizada del diseño</a>, <a href="../layout/logo-switch.html">Cambio de logotipo</a>, <a href="../layout/layout-rtl.html">Diseño RTL</a></li>
+</ul>
+<h5 id="comportamiento-adaptable">Comportamiento adaptable</h5>
+<p>En el punto de interrupción <code>sidebar-expand-*</code> o superior, la barra lateral se muestra <strong>en línea</strong>, dentro de la cuadrícula junto a <code>.app-main</code>. Por debajo de ese punto, pasa a ser <strong>fuera del lienzo</strong>: permanece oculta y se desliza desde la izquierda al pulsar el botón de menú.</p>
+<p>Clases específicas para dispositivos móviles:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-responsive" tabindex="0"><table><thead><tr><th>Clase</th><th>Cuándo se aplica</th><th>Efecto</th></tr></thead><tbody><tr><td><code>sidebar-open</code></td><td>Cuerpo — cuando la persona usuaria abre explícitamente la barra lateral móvil</td><td>Desliza la barra lateral sobre el contenido con una capa superpuesta</td></tr><tr><td><code>sidebar-collapse</code></td><td>Cuerpo — se establece automáticamente al cerrar la barra lateral móvil</td><td>Oculta la barra lateral</td></tr></tbody></table></div>
+<p>Estas opciones se gestionan mediante el <a href="javascript/pushmenu.html">Complemento Menú lateral</a>; no tienes que escribirlas manualmente.</p>
+<h5 id="errores-frecuentes">Errores frecuentes</h5>
+<ul>
+<li><strong>Olvidar <code>.container-fluid</code> dentro de <code>.app-content</code></strong>; el contenido queda pegado al borde de la pantalla. Envuelve las tarjetas en un contenedor.</li>
+<li><strong>Colocar el control de la barra lateral fuera de <code>.app-header</code></strong>; seguirá funcionando, pero los estilos esperan que esté dentro de la barra de navegación.</li>
+<li><strong>Mezclar las clases <code>.app-*</code> y <code>.main-*</code></strong>: <code>.main-*</code> corresponde a los nombres de AdminLTE 3. No las combines. Consulta <a href="migration.html">Migración desde v3</a>.</li>
+<li><strong>Usar <code>position: fixed</code> en un elemento dentro de <code>.app-main</code></strong>: <code>layout-fixed</code> ya establece <code>overflow: auto</code> en <code>.app-main</code>. Los elementos secundarios con <code>position: fixed</code> pueden comportarse de forma inesperada. Usa posicionamiento sticky.</li>
+<li><strong>Definir manualmente el ancho de la barra lateral en CSS personalizado</strong>; el ancho de la barra lateral está disponible mediante la variable SCSS <code>$lte-sidebar-width</code>. Si necesitas conocerlo desde JavaScript, consulta el ancho calculado del elemento <code>.app-sidebar</code>.</li>
+</ul>
+<h5 id="próximos-pasos">Próximos pasos</h5>
+<ul>
+<li><a href="layout.html">Referencia del diseño</a>: clases CSS de bajo nivel y su función</li>
+<li><a href="javascript/pushmenu.html">Complemento Menú lateral</a>: implementación del control de la barra lateral</li>
+<li><a href="customization.html">Personalización</a>: cambiar el ancho de la barra lateral, el punto de interrupción y los colores</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <!--begin::Pie de página-->
+<footer class="app-footer">
+  <!--begin::To the end-->
+  <div class="float-end d-none d-sm-inline">Tu panel de administración</div>
+  <!--end::To the end-->
+  <!--begin::Copyright-->
+  <strong>
+    Derechos de autor &copy; 2014-2026&nbsp;
+    <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+  </strong>
+  Todos los derechos reservados.
+  <!--end::Copyright-->
+</footer>
+<!--end::Pie de página-->
+    </div>
+    <!--begin::Complemento de terceros (OverlayScrollbars)-->
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento de terceros (OverlayScrollbars)--><!--begin::Complemento requerido (popperjs for Bootstrap 5)-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento requerido (popperjs for Bootstrap 5)--><!--begin::Complemento requerido (Bootstrap 5)-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<!--end::Complemento requerido (Bootstrap 5)--><!--begin::Complemento requerido (AdminLTE)-->
+<script src="../js/adminlte.js"></script>
+<!--end::Complemento requerido (AdminLTE)-->
+<!--begin::OverlayScrollbars Configure-->
+<script>
+const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper"
+const Default = {
+  scrollbarTheme: "os-theme-light",
+  scrollbarAutoHide: "leave",
+  scrollbarClickScroll: true
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER)
+  
+  // Disable OverlayScrollbars on mobile devices to prevent touch interference
+  const isMobile = window.innerWidth <= 992
+  
+  if (
+    sidebarWrapper &&
+    OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined &&
+    !isMobile
+  ) {
+    OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+      scrollbars: {
+        theme: Default.scrollbarTheme,
+        autoHide: Default.scrollbarAutoHide,
+        clickScroll: Default.scrollbarClickScroll
+      }
+    })
+  }
+})
+</script>
+<!--end::OverlayScrollbars Configure-->
+<!--begin::Gráficos según el modo de color-->
+<script>
+  // ApexCharts draws light-theme tooltips and axis text unless told otherwise,
+  // which is unreadable in dark mode (#6105). Give it the page's colour mode as
+  // a valor global predeterminado before any chart is created — this runs before the chart
+  // pages' own scripts — and mantener sincronizados todos los gráficos que tengan un `chart.id` in step
+  // cuando cambie el modo (ColorMode, the OS in auto mode, or código propio).
+  ;(() => {
+    "use strict"
+    const mode = () => (document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light")
+    // `Apex` is ApexCharts' global-options object; it must exist antes de cargar la biblioteca.
+    // theme.mode also sets a dark chart background — keep the card's instead.
+    // eslint-disable-next-line unicorn/no-global-object-property-assignment
+    globalThis.Apex ||= {}
+    const apex = globalThis.Apex
+    apex.theme = { mode: mode() }
+    apex.chart = Object.assign(apex.chart || {}, { background: "transparent" })
+    new MutationObserver(() => {
+      const next = mode()
+      apex.theme = { mode: next }
+      const instances = apex._chartInstances || []
+      for (const { chart } of instances) {
+        chart.updateOptions({ theme: { mode: next } }, false, false)
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-bs-theme"] })
+  })()
+</script>
+<!--end::Gráficos según el modo de color-->
+
+
+<!--begin::Selector de modo de color-->
+<!-- The selector claro/oscuro/automático incluido in adminlte.js as the ColorMode
+     module (since 4.1) — no se necesita un script en la página. Only the no-flash snippet
+     in <head> stays inline, because it must run before first paint. -->
+<!--end::Selector de modo de color-->
+
+<!--email_on-->
+  </body>
+</html>
