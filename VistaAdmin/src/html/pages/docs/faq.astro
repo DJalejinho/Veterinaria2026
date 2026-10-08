@@ -1,0 +1,399 @@
+---
+import Head from "@components/_head.astro"
+import Footer from "@components/dashboard/_footer.astro"
+import Topbar from "@components/dashboard/_topbar.astro"
+import Sidenav from "@components/dashboard/_sidenav.astro"
+import Scripts from "@components/_scripts.astro"
+
+const title = "Preguntas frecuentes | AdminLTE 4"
+const path = "../../../dist"
+const mainPage = "docs"
+const page = "faq";
+
+type Qa = { q: string; a: string }
+type Section = { id: string; title: string; icon: string; tone: string; items: Qa[] }
+
+const sections: Section[] = [
+  {
+    id: "getting-started",
+    title: "Primeros pasos",
+    icon: "rocket-takeoff",
+    tone: "primary",
+    items: [
+      {
+        q: "¿Qué es exactamente AdminLTE?",
+        a: `Una <em>plantilla</em> gratuita de panel de administración con licencia MIT. Es un conjunto de archivos HTML, CSS y JavaScript basado en Bootstrap 5.3; no es un framework ni una biblioteca de componentes de npm. Incorpóralo al proyecto y adapta el marcado a tu aplicación.`
+      },
+      {
+        q: "¿Necesito compilar para usarlo?",
+        a: `No. La guía <a href="getting-started.html">Primeros pasos</a> explica cómo usar la plantilla únicamente con CDN: copia cuatro etiquetas <code>&lt;link&gt;</code> y cuatro etiquetas <code>&lt;script&gt;</code> en tu HTML. El flujo con npm está disponible si quieres personalizar variables SCSS o eliminar del JavaScript el código que no utilizas.`
+      },
+      {
+        q: "¿Qué versión de Bootstrap requiere la v4?",
+        a: `Bootstrap 5.3.x. El <code>package.json</code> fija la versión 5.3.8. Las versiones 5.3 anteriores deberían funcionar, aunque no se han probado. Bootstrap 5.0, 5.1 y 5.2 no son compatibles (el modo de color y el sistema <code>data-bs-theme</code> se incorporaron en 5.3).`
+      },
+      {
+        q: "¿Puedo usar AdminLTE 4 con jQuery?",
+        a: `No <em>necesitas</em> jQuery — el JavaScript de AdminLTE 4 está escrito en JavaScript nativo. Si tu aplicación ya usa jQuery, ambas tecnologías pueden convivir. Sin embargo, los complementos de AdminLTE 4 no dependen de jQuery ni incluyen adaptadores del tipo <code>$.fn.xxx()</code>.<br /><br />La carpeta <code>plugins/</code> de v3 también desapareció. Cada widget incluido tiene una alternativa en JavaScript nativo; consulta la <a href="migration.html#third-party-plugin-replacements">tabla de alternativas a complementos</a> para ver la correspondencia completa (Select2 → Tom Select, DataTables → Tabulator, Summernote → Quill, entre otros).`
+      },
+      {
+        q: "¿AdminLTE 4 es compatible con Select2?",
+        a: `AdminLTE 4 recomienda <a href="https://tom-select.js.org/" target="_blank" rel="noopener">Tom Select</a> en su lugar. Ofrece las funciones por las que se suele elegir Select2 — listas desplegables con búsqueda, selección múltiple, etiquetas, opciones que se pueden quitar, opciones cargadas mediante AJAX, desplazamiento virtual en conjuntos de datos grandes y navegación con teclado — con un tamaño aproximado de <strong>20&nbsp;kB gzip</strong>, frente a los aproximadamente <strong>~50&nbsp;kB</strong> incluido jQuery. <code>forms/advanced.html</code> muestra estas funciones, incluido un campo paginado con datos remotos y cancelación de solicitudes. También hay una <a href="../forms/advanced.html#select2">correspondencia detallada de la API</a> si estás adaptando código existente.<br /><br />Select2 sigue recibiendo mantenimiento (4.1.0 se publicó en 2026), pero continúa siendo un plugin de jQuery — su wrapper UMD requiere jQuery y no existe una compilación independiente. Incluirlo volvería a agregar jQuery a un framework cuya versión 4 se diseñó para no necesitarlo. Además, ninguno de los ports oficiales para Vue, React, Django o Laravel podría usarlo.<br /><br />Si de todos modos debes usar Select2, AdminLTE incluye una hoja de compatibilidad <strong>solo de estilos</strong> — consulta el <a href="integrations.html#select2-compatibility-theme">tema de compatibilidad de Select2</a>. Debes aportar el plugin; esta hoja adapta Select2 a Bootstrap 5.3 e incluye compatibilidad con el modo oscuro y los modales. AdminLTE no agrega jQuery.`
+      }
+    ]
+  },
+  {
+    id: "framework-integrations",
+    title: "Integraciones con frameworks",
+    icon: "puzzle",
+    tone: "info",
+    items: [
+      {
+        q: "¿Se puede usar AdminLTE con WordPress?",
+        a: `Sí; solo requiere HTML, CSS y JavaScript. Lo habitual es crear un tema personalizado de WordPress que integre el marcado de AdminLTE con <code>wp_head()</code>, <code>wp_footer()</code> y los loops de WordPress. AdminLTE no incluye una versión específica para WordPress; adaptar las clases nav-walker y los formularios de autenticación queda a cargo del equipo.`
+      },
+      {
+        q: "¿Laravel? ¿Symfony? ¿Yii? ¿Django? ¿Rails?",
+        a: `Todos son posibles. AdminLTE es una plantilla renderizada en el servidor: copia las páginas de demostración en tus vistas o plantillas, reemplaza el contenido estático por las variables del framework y configura las rutas y la autenticación como de costumbre. Existen paquetes comunitarios en Composer/Packagist para Laravel y Symfony, aunque suelen ir por detrás de la versión oficial; confirma que incluyan la v4 antes de depender de ellos.`
+      },
+      {
+        q: "¿React, Vue, Svelte o Angular?",
+        a: `<p>Es posible, aunque menos natural. Los complementos JavaScript de AdminLTE usan hooks del ciclo de vida del DOM (<code>DOMContentLoaded</code> y patrones con MutationObserver), que pueden interferir con la reconciliación del framework. Si usas un framework SPA, considera estas opciones:</p>
+<ul>
+  <li>Usar AdminLTE <em>solo</em> para CSS: conservar el estilo visual y crear componentes propios de React/Vue para las partes interactivas.</li>
+  <li>O elegir una biblioteca de componentes creada para tu framework (PrimeReact, Vuetify, etc.).</li>
+</ul>
+<p class="mb-0">No recomendamos envolver los plugins de AdminLTE de la época de jQuery en componentes SPA: la carga de mantenimiento supera la ventaja visual.</p>`
+      }
+    ]
+  },
+  {
+    id: "customization",
+    title: "Personalización",
+    icon: "palette",
+    tone: "warning",
+    items: [
+      {
+        q: "¿Cómo cambio el color principal?",
+        a: `<p>Bootstrap compila <code>$primary</code> en sus componentes. Por eso, sobrescribir solo <code>--bs-primary</code> cambia <code>.text-primary</code> y <code>.bg-primary</code>, pero deja azules <code>.btn-primary</code>, la paginación, las casillas y el indicador de foco. Hay dos opciones que sí funcionan:</p>
+<p><strong>Con Sass</strong>: define <code>$primary</code> antes de importar AdminLTE y todos los componentes se compilarán con ese valor:</p>
+<pre class="astro-code"><code>$primary: #6610f2;
+@import "admin-lte/src/scss/adminlte";</code></pre>
+<p><strong>Sin compilar</strong>: carga la hoja de paleta opcional y asigna el nombre del color en <code>&lt;html&gt;</code>; la hoja conecta las variables de color de los componentes:</p>
+<pre class="astro-code"><code>&lt;link rel="stylesheet" href="css/adminlte-colors.css"&gt;
+&lt;html lang="es" data-lte-primary="indigo"&gt;</code></pre>
+<p class="mb-0">Para un color de marca que no esté en la paleta, basta con <code>--bs-primary</code> y ese atributo; consulta <a href="colors.html">Colores y estilos</a>. Para el ancho de la barra lateral, los puntos de interrupción y la escala de espaciado, consulta <a href="customization.html">Personalización de temas</a>.</p>`
+      },
+      {
+        q: "¿Dónde están los colores de la v3 — <code>bg-navy</code>, <code>bg-teal</code>, los temas de la barra lateral? ¿Puedo agregar mi color de marca?",
+        a: `<p>Están en una hoja de estilos opcional, <code>dist/css/adminlte-colors.css</code> (≈ 8 kB comprimida con gzip), por lo que no agrega peso si no la cargas. Incluye catorce colores rediseñados, todos legibles con texto blanco, con las familias completas <code>.bg-*</code>, <code>.text-bg-*</code>, <code>.card-*</code>, <code>.callout-*</code> y <code>.bg-gradient-*</code>. Un estilo de color para la barra lateral es simplemente <code>&lt;aside class="app-sidebar text-bg-navy" data-bs-theme="dark"&gt;</code>.</p>
+<p class="mb-0">¿Quieres conservar exactamente los colores de AdminLTE 3? Carga <code>dist/css/adminlte-colors-v3.css</code> en su lugar: incluye los 18 colores de la v3 con sus nombres, valores y familias de clases originales. Puedes definir tu color con una línea de Sass: <code>$lte-palette-custom: ("brand": #0f766e)</code>. Para asignar uno de esos colores a <code>primary</code> —botones, enlaces, paginación e indicador de foco—, agrega <code>data-lte-primary="teal"</code> en <code>&lt;html&gt;</code>. La paleta, los ajustes preestablecidos y el comprobador de colores de marca están en <a href="colors.html">Colores</a>; prueba los temas en vivo en la <a href="../UI/colors.html">demostración de Colores</a> o el <a href="../generate/theme.html">Personalizador de temas</a>.`
+      },
+      {
+        q: "¿Cómo agrego un selector de fechas, selección múltiple o editor de texto enriquecido?",
+        a: `AdminLTE no incluye estos componentes para mantener ligero el framework. La página de <a href="integrations.html">Integraciones recomendadas</a> enumera bibliotecas destacadas de terceros (Flatpickr, Tom Select, Quill, etc.) con fragmentos de instalación listos para copiar.`
+      },
+      {
+        q: "¿Puedo usar FontAwesome en lugar de Bootstrap Icons?",
+        a: `Sí. Bootstrap Icons es la opción predeterminada en las demostraciones porque tiene licencia MIT, se distribuye con Bootstrap y usa SVG; sin embargo, el CSS y JavaScript de AdminLTE no dependen de ella. Agrega la hoja de estilos de Font Awesome y reemplaza <code>&lt;i class="bi bi-x"&gt;</code> with <code>&lt;i class="fas fa-x"&gt;</code> en el marcado.`
+      }
+    ]
+  },
+  {
+    id: "versions",
+    title: "Versiones y actualizaciones",
+    icon: "arrow-clockwise",
+    tone: "success",
+    items: [
+      {
+        q: "¿Cómo recibo avisos de nuevas versiones?",
+        a: `<a href="https://github.com/ColorlibHQ/AdminLTE">Sigue el repositorio de GitHub</a> (solo versiones) o suscríbete al feed RSS en <code>https://github.com/ColorlibHQ/AdminLTE/releases.atom</code>.`
+      },
+      {
+        q: "¿Dónde está la documentación de AdminLTE 3?",
+        a: `Sigue disponible en <a href="https://adminlte.io/docs/3.2/">adminlte.io/docs/3.2</a>; allí también hay enlaces a versiones anteriores. La rama v3 de GitHub continúa recibiendo correcciones críticas; las nuevas funciones se agregan solo a v4.`
+      },
+      {
+        q: "¿Cómo actualizo de la v3 a la v4?",
+        a: `Consulta la guía específica de <a href="migration.html">Migración desde v3</a>. En resumen: los nombres de clase cambiaron (<code>.wrapper</code> → <code>.app-wrapper</code>), <code>data-toggle</code> → <code>data-bs-toggle</code>, el modo oscuro usa <code>data-bs-theme</code> en lugar de <code>.dark-mode</code>, y ya no se necesita jQuery.`
+      }
+    ]
+  },
+  {
+    id: "licensing",
+    title: "Licencias",
+    icon: "shield-check",
+    tone: "secondary",
+    items: [
+      {
+        q: "¿AdminLTE es gratuito para uso comercial?",
+        a: `Sí; tiene licencia MIT. Puedes usarlo en productos comerciales, aplicaciones SaaS, trabajos para clientes y otros proyectos. El único requisito es conservar el aviso de derechos de autor en los archivos fuente (<code>adminlte.css</code> / <code>adminlte.js</code>). No hace falta mostrar atribución en la interfaz.`
+      },
+      {
+        q: "¿Tengo que dar crédito a AdminLTE en mi aplicación?",
+        a: `No. La licencia MIT solo requiere conservar el aviso de licencia en los archivos fuente que distribuyas. No tienes que mencionar AdminLTE en la interfaz, en la página «Acerca de» ni en el README.`
+      },
+      {
+        q: "¿Puedo vender un producto creado con AdminLTE?",
+        a: `Sí. La licencia MIT lo permite expresamente. También puedes vender versiones modificadas del propio AdminLTE, siempre que conserves el aviso de copyright original.`
+      }
+    ]
+  },
+  {
+    id: "troubleshooting",
+    title: "Solución de problemas",
+    icon: "wrench-adjustable",
+    tone: "danger",
+    items: [
+      {
+        q: "La barra lateral no se contrae al pulsar el botón de menú.",
+        a: `Comprueba que esté cargado el complemento PushMenu. Está incluido en <code>adminlte.js</code>; verifica que la etiqueta de script esté en la página y aparezca <em>después</em> del marcado que controla. Comprueba también que el botón de menú tenga <code>data-lte-toggle="sidebar"</code> (no <code>data-widget="pushmenu"</code>, que es el atributo de v3).`
+      },
+      {
+        q: "El modo oscuro no se conserva al recargar la página.",
+        a: `El selector de <a href="color-mode.html">modo de color</a> incluido guarda la elección en <code>localStorage</code> con la clave <code>lte-theme</code>. Si usas otra implementación, asegúrate de que establezca <code>document.documentElement.setAttribute('data-bs-theme', ...)</code> y guarde el valor en localStorage cuando cambie.`
+      },
+      {
+        q: "AdminLTE sigue sobrescribiendo mi tema personalizado.",
+        a: `Desactiva el selector incluido con <code>&lt;html data-lte-color-mode="off"&gt;</code>. Así, ColorMode nunca escribe <code>data-bs-theme</code> —ni al cargar, ni al pulsar el control ni cuando cambia la preferencia del sistema operativo—, por lo que tu selector (o un nombre de tema de Bootstrap personalizado) mantiene el control. Si solo necesitas un valor predeterminado renderizado en el servidor, define <code>data-bs-theme</code> en <code>&lt;html&gt;</code>; se respetará mientras la persona usuaria no haya elegido otro tema. Consulta <a href="color-mode.html">modo de color</a>.`
+      },
+      {
+        q: "Al pulsar Escape se cierra el modal de Bootstrap y también la barra lateral de AdminLTE.",
+        a: `Corregido en la v4.0.0 (#5993). Si el problema persiste, estás usando una versión RC anterior; actualiza a la más reciente.`
+      },
+      {
+        q: "Al imprimir, aparece la URL después de cada enlace y un recuadro alrededor de los botones.",
+        a: `Esos son los valores predeterminados de impresión de AdminLTE, pensados para leer la página en papel. Para imprimir una página como documento —por ejemplo, una factura o una orden de trabajo para un cliente—, agrega <code>&lt;html data-lte-print="plain"&gt;</code> (también funciona en cualquier contenedor) para quitar ambos elementos y mantener el texto negro sobre fondo blanco. Consulta la <a href="recipes.html">Recetas</a>.`
+      },
+      {
+        q: "La barra lateral y el encabezado ya no se imprimen.",
+        a: `Es intencional: la estructura —encabezado, barra lateral y pie de página— sirve para navegar; imprimirla ocupaba 200 px de cada hoja con el menú y desplazaba el contenido a páginas adicionales (#6113). Ahora el contenido ocupa todo el ancho del papel, como en v3. Agrega <code>&lt;html data-lte-print="app"&gt;</code> para volver a imprimir todo el diseño, o usa <code>.d-print-flex</code> / <code>.d-print-block</code> de Bootstrap para recuperar una parte.`
+      },
+      {
+        q: "Mi SCSS personalizado no sobrescribe los valores predeterminados de AdminLTE.",
+        a: `Coloca tus sobrescrituras <em>antes</em> del <code>@import</code> del archivo SCSS de AdminLTE. AdminLTE usa <code>!default</code> en sus variables, por lo que prevalece la primera declaración. Consulta <a href="customization.html#scss-variables">Personalización de temas</a> para ver el orden de importación.`
+      },
+      {
+        q: "<code>npm install</code> fails with errores de dependencias peer.",
+        a: `Usamos un bloque <code>overrides</code> en <code>package.json</code> para resolver las dependencias peer. Asegúrate de usar npm 8.3 o posterior. En versiones anteriores, instala con <code>--legacy-peer-deps</code>.`
+      }
+    ]
+  }
+];
+
+const totalQuestions = sections.reduce((sum, s) => sum + s.items.length, 0);
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary docs-page faq-page">
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+      <main class="app-main">
+        <div class="app-content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="mb-0 fs-3">Preguntas frecuentes</h1>
+              </div>
+              <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Documentación</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Preguntas frecuentes</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="container-fluid">
+
+            <!-- Hero -->
+            <section class="faq-hero text-center mb-4">
+              <span class="faq-hero-eyebrow">
+                <i class="bi bi-patch-question-fill" aria-hidden="true"></i>
+                Preguntas frecuentes
+              </span>
+              <h1 class="faq-hero-title">¿En qué podemos ayudarte?</h1>
+              <p class="faq-hero-lead">
+                Respuestas rápidas a las {totalQuestions} preguntas que recibimos con más frecuencia.
+                Usa el buscador o selecciona un tema.
+              </p>
+              <form class="faq-search" role="search" onsubmit="return false;">
+                <i class="bi bi-search faq-search-icon" aria-hidden="true"></i>
+                <input
+                  type="search"
+                  id="faq-search-input"
+                  class="form-control form-control-lg"
+                  placeholder="Buscar en las preguntas frecuentes&hellip;"
+                  aria-label="Buscar en las preguntas frecuentes"
+                  autocomplete="off"
+                />
+                <button
+                  type="button"
+                  class="faq-search-clear d-none"
+                  id="faq-search-clear"
+                  aria-label="Borrar búsqueda"
+                >
+                  <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+              </form>
+              <p class="faq-empty-state d-none" id="faq-empty-state">
+                <i class="bi bi-emoji-frown" aria-hidden="true"></i>
+                Ninguna pregunta coincide con la búsqueda. Prueba otra palabra o
+                <a href="https://github.com/ColorlibHQ/AdminLTE/discussions" target="_blank" rel="noopener">abrir un debate</a>.
+              </p>
+            </section>
+
+            <!-- botones de navegación por sección -->
+            <nav class="faq-chips mb-4" aria-label="Secciones de preguntas frecuentes">
+              {
+                sections.map((s) => (
+                  <a href={`#${s.id}`} class={`faq-chip faq-chip-${s.tone}`}>
+                    <i class={`bi bi-${s.icon}`} aria-hidden="true"></i>
+                    <span>{s.title}</span>
+                    <span class="faq-chip-count">{s.items.length}</span>
+                  </a>
+                ))
+              }
+            </nav>
+
+            <!-- Secciones -->
+            <div class="faq-sections">
+              {
+                sections.map((section) => (
+                  <section id={section.id} class="faq-section" data-faq-section>
+                    <header class={`faq-section-header faq-section-${section.tone}`}>
+                      <span class="faq-section-icon">
+                        <i class={`bi bi-${section.icon}`} aria-hidden="true" />
+                      </span>
+                      <div>
+                        <h2 class="faq-section-title">{section.title}</h2>
+                        <p class="faq-section-count">
+                          {section.items.length} {section.items.length === 1 ? "pregunta" : "preguntas"}
+                        </p>
+                      </div>
+                    </header>
+                    <div class="faq-section-items">
+                      {section.items.map((item) => (
+                        <details class="faq-item" data-faq-item>
+                          <summary>
+                            <span class="faq-q-icon">
+                              <i class="bi bi-question-lg" aria-hidden="true" />
+                            </span>
+                            <span class="faq-q-text" set:html={item.q} />
+                            <span class="faq-q-chevron">
+                              <i class="bi bi-chevron-down" aria-hidden="true" />
+                            </span>
+                          </summary>
+                          <div class="faq-answer" set:html={item.a} />
+                        </details>
+                      ))}
+                    </div>
+                  </section>
+                ))
+              }
+            </div>
+
+            <!-- CTA footer -->
+            <section class="faq-cta mt-5">
+              <div class="faq-cta-icon">
+                <i class="bi bi-chat-quote" aria-hidden="true"></i>
+              </div>
+              <h2>¿Necesitas más ayuda?</h2>
+              <p>
+                Abre un debate en GitHub o consulta la documentación para encontrar respuestas
+                más detalladas.
+              </p>
+              <div class="faq-cta-actions">
+                <a
+                  href="https://github.com/ColorlibHQ/AdminLTE/discussions"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-primary"
+                >
+                  <i class="bi bi-github me-2" aria-hidden="true"></i>
+                  Abrir un debate
+                </a>
+                <a href="introduction.html" class="btn btn-outline-secondary">
+                  <i class="bi bi-book me-2" aria-hidden="true"></i>
+                  Ver la documentación
+                </a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+    <Scripts path={path} />
+
+    <script is:inline>
+      // FAQ live search + clear button
+      ;(() => {
+        "use strict"
+        const input = document.getElementById("faq-search-input")
+        const clearBtn = document.getElementById("faq-search-clear")
+        const emptyState = document.getElementById("faq-empty-state")
+        if (!input) return
+
+        const items = Array.from(document.querySelectorAll("[data-faq-item]"))
+        const sections = Array.from(document.querySelectorAll("[data-faq-section]"))
+
+        const normalize = (s) => s.toLowerCase().trim()
+
+        const filter = (query) => {
+          const q = normalize(query)
+          clearBtn.classList.toggle("d-none", q.length === 0)
+
+          let visibleTotal = 0
+          for (const item of items) {
+            const text = item.textContent || ""
+            const matches = q === "" || normalize(text).includes(q)
+            item.classList.toggle("d-none", !matches)
+            // Abrir las coincidencias al buscar para mostrar su contexto
+            item.open = q !== "" && matches
+            if (matches) visibleTotal++
+          }
+
+          // Ocultar las secciones que no tengan elementos visibles
+          for (const section of sections) {
+            const hasVisible = section.querySelectorAll(
+              "[data-faq-item]:not(.d-none)"
+            ).length > 0
+            section.classList.toggle("d-none", !hasVisible)
+          }
+
+          emptyState.classList.toggle("d-none", visibleTotal !== 0)
+        }
+
+        input.addEventListener("input", (e) => filter(e.target.value))
+
+        clearBtn.addEventListener("click", () => {
+          input.value = ""
+          filter("")
+          input.focus()
+        })
+
+        // Desplazamiento suave a la sección al pulsar una etiqueta y compensación del encabezado fijo
+        for (const chip of document.querySelectorAll(".faq-chip")) {
+          chip.addEventListener("click", (e) => {
+            const id = chip.getAttribute("href")?.replace("#", "")
+            if (!id) return
+            const target = document.getElementById(id)
+            if (!target) return
+            e.preventDefault()
+            target.scrollIntoView({ behavior: "smooth", block: "start" })
+            history.replaceState(null, "", "#" + id)
+          })
+        }
+      })()
+    </script>
+  </body>
+</html>

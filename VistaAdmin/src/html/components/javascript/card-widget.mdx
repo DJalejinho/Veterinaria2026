@@ -1,0 +1,95 @@
+El complemento CardWidget permite contraer, expandir, eliminar y maximizar componentes de tarjeta.
+
+##### Uso
+
+Este complemento se activa mediante atributos de datos en los botones de un elemento `.card`.
+
+**Data API**
+
+Agrega `data-lte-toggle="card-collapse"` para mostrar u ocultar el cuerpo de la tarjeta, `data-lte-toggle="card-remove"` para eliminarla o `data-lte-toggle="card-maximize"` para maximizarla.
+
+```html
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Título de la tarjeta</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse" title="Contraer">
+        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-maximize" title="Maximizar">
+        <i class="bi bi-fullscreen"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-lte-toggle="card-remove" title="Eliminar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+  <div class="card-body">El contenido de la tarjeta va aquí.</div>
+  <div class="card-footer">Pie de la tarjeta</div>
+</div>
+```
+
+##### Eventos
+
+El complemento emite los siguientes eventos en el elemento que lo activa:
+
+| Evento | Descripción |
+|-------|-------------|
+| `collapsed.lte.card-widget` | Se emite cuando se contrae el cuerpo de la tarjeta. |
+| `expanded.lte.card-widget` | Se emite cuando se expande el cuerpo de la tarjeta. |
+| `remove.lte.card-widget` | Se emite cuando se elimina la tarjeta. |
+| `maximized.lte.card-widget` | Se emite cuando se maximiza la tarjeta. |
+| `minimized.lte.card-widget` | Se emite cuando se restaura la tarjeta maximizada. |
+
+##### Clases CSS
+
+| Clase | Descripción |
+|-------|-------------|
+| `collapsed-card` | Se aplica a la tarjeta cuando está contraída. |
+| `maximized-card` | Se aplica a la tarjeta cuando está maximizada. |
+
+##### Configuración
+
+El complemento no lee atributos de configuración `data-*`. Para personalizar su comportamiento, crea una instancia desde el código y pásale una configuración:
+
+| Opción | Valor predeterminado | Descripción |
+|---|---|---|
+| `animationSpeed` | `500` | Duración de la animación de deslizamiento, en milisegundos. |
+| `collapseTrigger` | `[data-lte-toggle="card-collapse"]` | Selector CSS para los botones de contraer. |
+| `removeTrigger` | `[data-lte-toggle="card-remove"]` | Selector CSS para los botones de eliminar. |
+| `maximizeTrigger` | `[data-lte-toggle="card-maximize"]` | Selector CSS para los botones de maximizar. |
+
+##### API programática
+
+```js
+import { CardWidget } from "admin-lte"
+
+const card = document.querySelector("#chart-card")
+const widget = new CardWidget(card, { animationSpeed: 250 })
+
+widget.maximize()     // expandir a pantalla completa
+widget.collapse()     // ocultar el cuerpo y el pie
+widget.expand()       // restaurar desde el estado contraído
+widget.remove()       // animar la salida y eliminar del DOM
+widget.toggle()       // expandir o contraer según el estado actual
+widget.toggleMaximize()  // maximizar o restaurar según el estado actual
+```
+
+###### Métodos
+
+| Método | Devuelve | Descripción |
+|---|---|---|
+| `collapse()` | `void` | Desliza el cuerpo y el pie hacia arriba, añade `collapsed-card` y emite `collapsed.lte.card-widget`. |
+| `expand()` | `void` | Desliza el cuerpo y el pie hacia abajo, quita `collapsed-card` y emite `expanded.lte.card-widget`. |
+| `toggle()` | `void` | Llama a `collapse()` o `expand()` según la clase `collapsed-card`. |
+| `maximize()` | `void` | Fija la tarjeta a pantalla completa, añade `maximized-card` y emite `maximized.lte.card-widget`. |
+| `minimize()` | `void` | Restablece el tamaño original, quita `maximized-card` y emite `minimized.lte.card-widget`. |
+| `toggleMaximize()` | `void` | Llama a `maximize()` o `minimize()` según la clase `maximized-card`. |
+| `remove()` | `void` | Anima la salida de la tarjeta, la elimina del DOM y emite `remove.lte.card-widget`. |
+
+##### Notas
+
+- Las tarjetas anidadas se gestionan correctamente: contraer la tarjeta principal no afecta a las tarjetas secundarias.
+- Al maximizar una tarjeta también se añade `maximized-card` a `<html>` para que los estilos globales puedan responder.
+- Si maximizas una tarjeta contraída, conservará ese estado; la clase `was-collapsed` lo registra.

@@ -1,0 +1,201 @@
+---
+import Head from "@components/_head.astro"
+import Footer from "@components/dashboard/_footer.astro"
+import Topbar from "@components/dashboard/_topbar.astro"
+import Sidenav from "@components/dashboard/_sidenav.astro"
+import Scripts from "@components/_scripts.astro"
+
+const title = "AdminLTE 4 | Preguntas frecuentes"
+const path = "../../../dist"
+const mainPage = "pages"
+const page = "faq";
+
+const sections = [
+  {
+    title: "Primeros pasos",
+    icon: "rocket-takeoff",
+    items: [
+      {
+        q: "¿Cómo creo una cuenta?",
+        a: "Haz clic en <strong>Crear cuenta</strong> en la esquina superior derecha, introduce tu correo electrónico y una contraseña segura; luego verifica el correo para activar tu espacio de trabajo."
+      },
+      {
+        q: "¿Puedo probar el producto antes de pagar?",
+        a: "Sí. Todos los planes de pago incluyen una prueba gratuita de 14 días. No necesitas una tarjeta de crédito para empezar."
+      },
+      {
+        q: "¿Cómo invito a mis compañeros?",
+        a: "Ve a <strong>Configuración &rarr; Equipo</strong>, haz clic en <strong>Invitar a un miembro</strong> e ingresa su correo electrónico. Recibirá un enlace de invitación válido durante siete días."
+      }
+    ]
+  },
+  {
+    title: "Facturación y planes",
+    icon: "credit-card",
+    items: [
+      {
+        q: "¿Qué métodos de pago aceptan?",
+        a: "Aceptamos las principales tarjetas de crédito y débito. Los planes Empresarial anuales se pueden pagar mediante factura."
+      },
+      {
+        q: "¿Puedo cambiar de plan más adelante?",
+        a: "Sí. Las mejoras de plan se aplican de inmediato y se cobran de forma proporcional. Las reducciones se aplican al final del ciclo de facturación actual."
+      },
+      {
+        q: "¿Ofrecen reembolsos?",
+        a: "Ofrecemos un reembolso completo dentro de los 30 días posteriores a tu primera factura pagada."
+      }
+    ]
+  },
+  {
+    title: "Seguridad y privacidad",
+    icon: "shield-lock",
+    items: [
+      {
+        q: "¿Dónde se almacenan mis datos?",
+        a: "Los datos se almacenan cifrados en centros de datos con certificación SOC 2. Puedes elegir la región (Estados Unidos o la Unión Europea) al configurar tu espacio de trabajo."
+      },
+      {
+        q: "¿Admiten SSO?",
+        a: "Sí, con el plan Empresarial. Admitimos SAML 2.0 y OIDC con proveedores como Okta, Azure AD y Google Workspace."
+      },
+      {
+        q: "¿Cómo puedo exportar o eliminar mis datos?",
+        a: "Puedes exportar tus datos en cualquier momento desde <strong>Configuración &rarr; Datos</strong>. Las solicitudes de eliminación se procesan dentro de los 30 días, según nuestro DPA."
+      }
+    ]
+  }
+];
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+      <main class="app-main">
+        <div class="app-content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="mb-0 fs-3">Preguntas frecuentes</h1>
+              </div>
+              <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Preguntas frecuentes</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="container-fluid">
+            <!-- Headline + search -->
+            <div class="text-center mb-4">
+              <h2 class="mb-2">¿En qué podemos ayudarte?</h2>
+              <p class="text-secondary mb-3">
+                Busca en nuestra base de conocimientos o explora los temas a continuación.
+              </p>
+              <form
+                class="row g-2 justify-content-center"
+                role="search"
+                onsubmit="event.preventDefault();"
+              >
+                <div class="col-md-8 col-lg-6">
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-body">
+                      <i class="bi bi-search" aria-hidden="true"></i>
+                    </span>
+                    <input
+                      type="search"
+                      class="form-control"
+                      placeholder="Buscar en las preguntas frecuentes&hellip;"
+                      aria-label="Buscar en las preguntas frecuentes"
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="row g-4">
+              {
+                sections.map((section, idx) => (
+                  <div class="col-lg-12">
+                    <div class="card">
+                      <div class="card-header d-flex align-items-center">
+                        <i
+                          class={`bi bi-${section.icon} fs-4 text-primary me-2`}
+                          aria-hidden="true"
+                        />
+                        <h3 class="card-title mb-0" set:html={section.title} />
+                      </div>
+                      <div class="card-body">
+                        <div class="accordion accordion-flush" id={`faq-${idx}`}>
+                          {section.items.map((item, j) => (
+                            <div class="accordion-item">
+                              <h2 class="accordion-header">
+                                <button
+                                  class="accordion-button collapsed"
+                                  type="button"
+                                  data-bs-toggle="collapse"
+                                  data-bs-target={`#faq-${idx}-${j}`}
+                                  aria-expanded="false"
+                                  aria-controls={`faq-${idx}-${j}`}
+                                >
+                                  {item.q}
+                                </button>
+                              </h2>
+                              <div
+                                id={`faq-${idx}-${j}`}
+                                class="accordion-collapse collapse"
+                                data-bs-parent={`#faq-${idx}`}
+                              >
+                                <div
+                                  class="accordion-body text-secondary"
+                                  set:html={item.a}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            <!-- ¿Todavía necesitas ayuda? -->
+            <div class="card mt-4">
+              <div class="card-body text-center py-4">
+                <i
+                  class="bi bi-chat-dots text-primary"
+                  style="font-size: 2.5rem;"
+                  aria-hidden="true"
+                ></i>
+                <h3 class="h5 mt-3 mb-2">¿Todavía necesitas ayuda?</h3>
+                <p class="text-secondary mb-3">
+                  ¿No encuentras lo que buscas? Nuestro equipo de soporte estará encantado
+                  to help.
+                </p>
+                <a href="mailto:support@example.com" class="btn btn-primary">
+                  <i class="bi bi-envelope me-1" aria-hidden="true"></i>
+                  Contactar al equipo de soporte
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+    <Scripts path={path} />
+  </body>
+</html>

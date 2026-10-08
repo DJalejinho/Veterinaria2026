@@ -1,0 +1,487 @@
+AdminLTE incluye deliberadamente pocas dependencias. En lugar de agregar todos los widgets de formularios y bibliotecas de gráficos, recomendamos bibliotecas de terceros destacadas que puedes integrar cuando las necesites. Todas las bibliotecas de esta lista tienen licencia **MIT**, reciben **mantenimiento activo** y **no dependen de jQuery**.
+
+Cada sección incluye un fragmento de instalación mediante CDN y el JavaScript mínimo para configurarlo. Si usas un empaquetador, puedes reemplazar las URL del CDN por instalaciones de npm.
+
+> **Sobre los números de versión:** cada URL del CDN fija una versión específica (por ejemplo, `@4.6.13`) para que los fragmentos sean reproducibles. Esas versiones estaban vigentes al publicarse la última versión de AdminLTE, pero las bibliotecas de terceros se actualizan por separado. Antes de copiar un fragmento a producción, consulta el sitio oficial de la biblioteca, enlazado en cada sección, y considera alojar una copia propia en lugar de depender del CDN a largo plazo.
+
+##### Widgets de formulario
+
+###### Selector de fecha y hora: Flatpickr
+
+[Flatpickr](https://flatpickr.js.org/) es un selector ligero de fecha y hora que no requiere dependencias.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
+
+<input type="text" class="form-control" id="datepicker" placeholder="Selecciona una fecha" />
+
+<script>
+  flatpickr("#datepicker", {
+    altInput: true,
+    altFormat: "F j, Y",
+    dateFormat: "Y-m-d"
+  })
+</script>
+```
+
+Admite rangos de fechas, selección exclusiva de hora, varias fechas e internacionalización de forma integrada.
+
+###### Selección múltiple y etiquetas: Tom Select
+
+[Tom Select](https://tom-select.js.org/) es una reescritura de Selectize en JavaScript vanilla. Es una buena opción para listas de selección con búsqueda, campos de etiquetas y autocompletado con datos remotos.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.6.1/dist/css/tom-select.bootstrap5.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.6.1/dist/js/tom-select.complete.min.js"></script>
+
+<select id="tags" class="form-control" multiple placeholder="Elige algunas etiquetas">
+  <option value="design">Diseño</option>
+  <option value="dev">Desarrollo</option>
+  <option value="qa">QA</option>
+</select>
+
+<script>
+  new TomSelect("#tags", { plugins: ["remove_button"] })
+</script>
+```
+
+Incluye el tema `tom-select.bootstrap5.min.css`, que coincide con el aspecto de los controles de formulario de Bootstrap.
+
+**Datos remotos.** Para listas conectadas a una base de datos en vez de a opciones estáticas, realiza la solicitud dentro de `load()`. Tom Select aplica un debounce mediante `loadThrottle` (300 ms de forma predeterminada), y el plugin `virtual_scroll` carga más resultados a medida que se desplaza la lista:
+
+```js
+let inFlight = null
+
+new TomSelect("#reviewer", {
+  valueField: "id",
+  labelField: "name",
+  searchField: ["name"],
+  loadThrottle: 300,                      // espera entre búsquedas, integrada
+  plugins: ["virtual_scroll"],            // paginación con desplazamiento infinito
+  firstUrl: (query) => `/api/users?q=${encodeURIComponent(query)}&page=1`,
+  load(query, callback) {
+    inFlight?.abort()                     // cancelar la solicitud anterior
+    inFlight = new AbortController()
+
+    fetch(this.getUrl(query), { signal: inFlight.signal })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.next) {
+          this.setNextUrl(query, json.next)
+        }
+        callback(json.results)
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          callback()
+        }
+      })
+  }
+})
+```
+
+`forms/advanced.html` ejecuta este mismo patrón contra un endpoint simulado. Reemplaza el simulador por una llamada `fetch()` para usarlo sin otros cambios.
+
+###### Si vienes de Select2
+
+[Select2](https://select2.org/) aún recibe mantenimiento (la versión 4.1.0 se publicó en 2026), pero sigue siendo un plugin de jQuery: su envoltorio UMD requiere jQuery y no existe una compilación que prescinda de él. Por eso AdminLTE 4 recomienda Tom Select, que ofrece funciones similares y ocupa cerca de 20 kB comprimidos con gzip, frente a los aproximadamente 50 kB de Select2 contando jQuery.
+
+La correspondencia entre las API es directa:
+
+| Select2 | Tom Select |
+|---|---|
+| `$("#x").select2()` | `new TomSelect("#x")` |
+| `$("#x").select2({ tags: true })` | `new TomSelect("#x", { create: true })` |
+| `allowClear: true` | `plugins: ["clear_button"]` |
+| `closeOnSelect: false` | `closeAfterSelect: false` |
+| `maximumSelectionLength: 3` | `maxItems: 3` |
+| `minimumInputLength: 2` | `shouldLoad: (q) => q.length >= 2` |
+| `ajax: { url, delay: 250 }` | `load(query, callback)` + `loadThrottle: 250` |
+| `ajax: { …, processResults }` | `valueField` / `labelField` / `searchField` |
+| desplazamiento infinito (`pagination.more`) | `plugins: ["virtual_scroll"]` + `setNextUrl()` |
+| `templateResult` / `templateSelection` | `render: { option, item }` |
+| `dropdownParent: $("#modal")` | *(no hace falta: el menú se muestra dentro del elemento)* |
+| `$("#x").val("2").trigger("change")` | `ts.setValue("2")` |
+| `$("#x").val()` | `ts.getValue()` |
+| `$("#x").on("select2:select", fn)` | `ts.on("item_add", fn)` |
+| `$("#x").on("change", fn)` | `ts.on("change", fn)` |
+| `$("#x").select2("open")` | `ts.open()` |
+| `$("#x").prop("disabled", true)` | `ts.disable()` |
+| `$("#x").select2("destroy")` | `ts.destroy()` |
+| `$("#x").empty().select2({ data })` | `ts.clearOptions(); ts.addOptions(data)` |
+
+Puedes consultar esta tabla y probar el código en la demostración [Elementos avanzados](../forms/advanced.html#select2).
+
+**Si necesitas conservar Select2**, AdminLTE incluye una hoja de compatibilidad que solo aplica estilos; consulta el [tema de compatibilidad con Select2](#select2-compatibility-theme) más abajo.
+
+###### Tema de compatibilidad con Select2
+
+Algunos proyectos no pueden prescindir de Select2: por ejemplo, un ERP con cientos de formularios renderizados en el servidor, un plugin de proveedor que lo inicializa automáticamente o un equipo que todavía no está listo para migrar. AdminLTE no incluye Select2 ni jQuery, pero sí ofrece un **tema de compatibilidad solo CSS** para que tu instalación de Select2 adopte las dimensiones de formularios, el indicador de foco, los estados de validación y el modo oscuro `data-bs-theme` de Bootstrap 5.3.
+
+- **`dist/css/adminlte-select2.css`** (+ `.min.css`, `.rtl.css`, `.rtl.min.css`)
+- No agrega JavaScript ni jQuery, y tampoco modifica `adminlte.css`: solo tienes que cargar una hoja de estilos adicional.
+
+Cárgalo **después** de `select2.css`:
+
+```html
+<link rel="stylesheet" href="path/to/adminlte.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" />
+<link rel="stylesheet" href="path/to/adminlte-select2.min.css" />
+
+<select id="country" class="form-select">
+  <option value="">Selecciona un país…</option>
+  <option value="lv">Letonia</option>
+</select>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+<script>
+  $("#country").select2({ width: "100%" })
+</script>
+```
+
+El tema se encarga de lo siguiente:
+
+| | |
+|---|---|
+| Medidas | La altura, el relleno, el tamaño de fuente y el radio del borde coinciden exactamente con `.form-select` |
+| Tamaños | Se respetan `.form-select-sm` y `.form-select-lg` en el `<select>` original |
+| Foco | Usa el anillo de foco de Bootstrap en lugar del contorno negro de Select2 |
+| Modo oscuro | Sigue `data-bs-theme`, también en el menú desplegable agregado al `body` |
+| Validación | `.is-invalid` y `.is-valid` en el `<select>` original cambian el color del contenedor |
+| Selección múltiple | Las opciones se muestran como insignias secundarias de Bootstrap |
+| Grupos de campos | Ajusta las esquinas y el tamaño flexible de `.input-group` |
+| Modales | Eleva el `z-index` del menú por encima de `.modal`. Resuelve uno de los errores más reportados al combinar Select2 con Bootstrap 5, por lo que ya no hace falta `dropdownParent` |
+| RTL | Se genera automáticamente junto con el resto del CSS |
+
+¿Usas un empaquetador? Puedes acceder a la hoja compilada mediante el mapa `exports` del paquete, después del CSS propio de Select2:
+
+```js
+import "admin-lte/dist/css/adminlte.min.css"
+import "select2/dist/css/select2.min.css"
+import "admin-lte/dist/css/adminlte-select2.min.css"
+```
+
+¿Compilas tu propio Sass? Importa el partial después de AdminLTE, que ya habrá cargado las variables y los mixins de Bootstrap que necesita:
+
+```scss
+@import "node_modules/admin-lte/src/scss/adminlte";
+@import "node_modules/admin-lte/src/scss/compat/select2";
+```
+
+El tema sigue el marcado de Select2 4.1.x (también cubre el marcado choice-remove de la versión 4.0.x). Solo aplica estilos: los errores del propio Select2 deben corregirse en Select2, y ninguno de los ports oficiales de AdminLTE para frameworks (Vue, React, Django, Laravel) puede usar un plugin de jQuery.
+
+###### Control deslizante de rango: noUiSlider
+
+[noUiSlider](https://refreshless.com/nouislider/) permite crear controles deslizantes de un valor, de rango y con varios controles, sin dependencias.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js"></script>
+
+<div id="slider"></div>
+
+<script>
+  noUiSlider.create(document.getElementById("slider"), {
+    start: [20, 80],
+    connect: true,
+    range: { min: 0, max: 100 }
+  })
+</script>
+```
+
+###### Selector de color: Pickr
+
+[Pickr](https://github.com/Simonwep/pickr) es un selector de color moderno y plano que ofrece varios temas.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.9.1/dist/themes/classic.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.9.1/dist/pickr.min.js"></script>
+
+<div id="color-picker"></div>
+
+<script>
+  Pickr.create({
+    el: "#color-picker",
+    theme: "classic",
+    default: "#0d6efd",
+    components: { preview: true, opacity: true, hue: true, interaction: { input: true, save: true } }
+  })
+</script>
+```
+
+###### Máscara de entrada: IMask
+
+[IMask](https://imask.js.org/) permite aplicar máscaras a teléfonos, tarjetas de crédito, fechas, importes y otros valores con un patrón fijo.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/imask@7.6.1/dist/imask.min.js"></script>
+
+<input class="form-control" id="phone" placeholder="(123) 456-7890" />
+
+<script>
+  IMask(document.getElementById("phone"), { mask: "(000) 000-0000" })
+</script>
+```
+
+##### Gestión de archivos
+
+###### Carga de archivos: Dropzone
+
+[Dropzone](https://www.dropzone.dev/) es una herramienta de referencia para subir archivos mediante arrastrar y soltar. La versión 6 está reescrita en JavaScript estándar; los ejemplos de la versión 5 dependían de jQuery, pero los de la versión 6 y posteriores no.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@6.0.0-beta.2/dist/dropzone.css" />
+<script src="https://cdn.jsdelivr.net/npm/dropzone@6.0.0-beta.2/dist/dropzone-min.js"></script>
+
+<form action="/upload" class="dropzone" id="uploader"></form>
+
+<script>
+  Dropzone.autoDiscover = false
+  new Dropzone("#uploader", { paramName: "file", maxFilesize: 5 })
+</script>
+```
+
+###### Carga de archivos: FilePond
+
+[FilePond](https://pqina.nl/filepond/) es una alternativa más moderna, con una experiencia de uso cuidada y plugins para vista previa de imágenes, validación, datos EXIF y más.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/filepond@4.32.12/dist/filepond.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/filepond@4.32.12/dist/filepond.min.js"></script>
+
+<input type="file" class="filepond" />
+
+<script>
+  FilePond.create(document.querySelector(".filepond"), { allowMultiple: true })
+</script>
+```
+
+##### Editores de texto enriquecido y Markdown
+
+###### Texto enriquecido: Quill
+
+[Quill](https://quilljs.com/) es uno de los editores WYSIWYG de código abierto con mayor soporte. Es ligero, modular y no requiere dependencias.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" />
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+<div id="editor" style="height: 12rem;"></div>
+
+<script>
+  new Quill("#editor", {
+    theme: "snow",
+    placeholder: "Escribe algo interesante&hellip;"
+  })
+</script>
+```
+
+###### Markdown: EasyMDE
+
+[EasyMDE](https://github.com/Ionaru/easy-markdown-editor) es una bifurcación de SimpleMDE que sigue recibiendo mantenimiento. Conserva el mismo aspecto y la misma API, y continúa recibiendo actualizaciones.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2.21.0/dist/easymde.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/easymde@2.21.0/dist/easymde.min.js"></script>
+
+<textarea id="markdown"></textarea>
+
+<script>
+  new EasyMDE({ element: document.getElementById("markdown") })
+</script>
+```
+
+###### WYSIWYG + Markdown — Toast UI Editor
+
+[Toast UI Editor](https://ui.toast.com/tui-editor) permite usar los modos Markdown y WYSIWYG en paralelo. Es útil cuando quieres que cada persona elija su modo preferido.
+
+```html
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+<div id="md-editor"></div>
+
+<script>
+  new toastui.Editor({
+    el: document.getElementById("md-editor"),
+    height: "20rem",
+    initialEditType: "markdown",
+    previewStyle: "vertical"
+  })
+</script>
+```
+
+##### Gráficos
+
+###### ApexCharts
+
+[ApexCharts](https://apexcharts.com/) es la biblioteca de gráficos que se usa en los paneles de AdminLTE. Tiene un aspecto moderno, animaciones y licencia MIT.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@5.12.0/dist/apexcharts.min.js"></script>
+
+<div id="chart"></div>
+
+<script>
+  new ApexCharts(document.querySelector("#chart"), {
+    chart: { type: "area", height: 300 },
+    series: [{ name: "Visitas", data: [30, 40, 35, 50, 49, 60, 70] }],
+    xaxis: { categories: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"] }
+  }).render()
+</script>
+```
+
+###### Chart.js
+
+[Chart.js](https://www.chartjs.org/) es una de las bibliotecas de gráficos tradicionales más solicitadas. Se basa en Canvas y admite una amplia variedad de tipos de gráficos.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
+
+<canvas id="bar-chart" height="120"></canvas>
+
+<script>
+  new Chart(document.getElementById("bar-chart"), {
+    type: "bar",
+    data: {
+      labels: ["Q1", "Q2", "Q3", "Q4"],
+      datasets: [{ label: "Ingresos", data: [120, 190, 170, 230] }]
+    }
+  })
+</script>
+```
+
+##### Tablas de datos
+
+###### Tabulator
+
+[Tabulator](https://tabulator.info/) es una alternativa a DataTables que no requiere jQuery y se usa en `tables/data.html`. Incluye ordenamiento, filtros, paginación, edición y exportación.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/css/tabulator_bootstrap5.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/js/tabulator.min.js"></script>
+
+<div id="table"></div>
+
+<script>
+  new Tabulator("#table", {
+    data: [{ id: 1, name: "Alice", role: "Admin" }],
+    layout: "fitColumns",
+    pagination: true,
+    paginationSize: 10,
+    columns: [
+      { title: "ID", field: "id", width: 60 },
+      { title: "Nombre", field: "name", headerFilter: "input" },
+      { title: "Rol", field: "role" }
+    ]
+  })
+</script>
+```
+
+##### Calendario
+
+###### FullCalendar
+
+[FullCalendar](https://fullcalendar.io/) es el calendario que se usa en `pages/calendar.html`. Admite programación con arrastrar y soltar, varias vistas y eventos recurrentes; tiene licencia MIT.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
+
+<div id="calendar"></div>
+
+<script>
+  new FullCalendar.Calendar(document.getElementById("calendar"), {
+    initialView: "dayGridMonth",
+    headerToolbar: { start: "prev,next today", center: "title", end: "dayGridMonth,timeGridWeek,listWeek" },
+    events: [{ title: "Equipo standup", start: "2026-06-01" }]
+  }).render()
+</script>
+```
+
+##### Mapas
+
+###### jsVectorMap
+
+[jsVectorMap](https://github.com/themustafaomar/jsvectormap) es el sucesor de jQuery Mapael y jVectorMap que no requiere dependencias. Ofrece mapas coropléticos, marcadores, acciones al hacer clic en cada región y un mapa mundial con archivos de datos por país.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/css/jsvectormap.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/js/jsvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.7.0/dist/maps/world.js"></script>
+
+<div id="map" style="height: 20rem;"></div>
+
+<script>
+  new jsVectorMap({
+    selector: "#map",
+    map: "world",
+    markers: [{ name: "Riga", coords: [56.95, 24.11] }]
+  })
+</script>
+```
+
+##### Arrastrar y soltar
+
+###### SortableJS
+
+[SortableJS](https://sortablejs.github.io/Sortable/) se usa en la demostración del tablero kanban. Permite reordenar listas y arrastrar elementos entre ellas, también en pantallas táctiles. Tiene 31 mil estrellas.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.7/Sortable.min.js"></script>
+
+<ul id="list" class="list-group">
+  <li class="list-group-item">Elemento 1</li>
+  <li class="list-group-item">Elemento 2</li>
+  <li class="list-group-item">Elemento 3</li>
+</ul>
+
+<script>
+  new Sortable(document.getElementById("list"), { animation: 150 })
+</script>
+```
+
+##### Visor de imágenes tipo lightbox
+
+###### GLightbox
+
+[GLightbox](https://biati-digital.github.io/glightbox/) es un visor lightbox hecho en JavaScript estándar para imágenes, videos y contenido integrado en la página.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/css/glightbox.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/glightbox@3.3.1/dist/js/glightbox.min.js"></script>
+
+<a href="image-large.jpg" class="glightbox">
+  <img src="image-thumb.jpg" alt="Haz clic para ampliar" />
+</a>
+
+<script>
+  GLightbox()
+</script>
+```
+
+##### Bibliotecas de iconos
+
+AdminLTE incluye [Bootstrap Icons](https://icons.getbootstrap.com/) de forma predeterminada: son iconos SVG, hay alrededor de 1.900 y se usan en toda la demostración. Si necesitas más, estas alternativas también funcionan con AdminLTE:
+
+| Biblioteca | Iconos | Notas |
+|---|---|---|
+| [Bootstrap Icons](https://icons.getbootstrap.com/) | Más de 1.900 | Predeterminada, SVG, MIT |
+| [Lucide](https://lucide.dev/) | Más de 1.500 | Moderna, SVG, ISC; estilo muy uniforme |
+| [Tabler Icons](https://tabler.io/icons) | Más de 5.800 | MIT; uno de los catálogos gratuitos más amplios |
+| [Material Symbols](https://fonts.google.com/icons) | Más de 3.500 | Google, Apache 2.0, fuente variable |
+| [FontAwesome Free](https://fontawesome.com/icons) | Más de 2.000 gratuitos | Muy reconocida, basada en fuentes |
+| [Phosphor](https://phosphoricons.com/) | Más de 6.000 | MIT, seis grosores |
+
+Combínalas como quieras: todas pueden coexistir.
+
+##### Nota sobre el empaquetado
+
+Los ejemplos anteriores usan CDN de jsDelivr para facilitar la copia y el uso. Para producción, conviene elegir una de estas opciones:
+
+1. **Instalar con npm y usar un empaquetador** (Vite, Webpack, Rollup): ofrece tree-shaking y permite fijar versiones.
+2. **Alojar los archivos en tu servidor**: evita que una caída del CDN interrumpa el servicio.
+3. **Usar CDN con hashes `integrity`**: adecuado para prototipos y demostraciones.
+
+AdminLTE no incluye estas bibliotecas; mantener reducido el tamaño del framework es una decisión intencional. Elige las que necesites y omite las demás.

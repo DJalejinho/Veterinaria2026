@@ -1,0 +1,82 @@
+El módulo `Accessibility` ofrece funciones para cumplir WCAG 2.1 AA y se inicializa automáticamente al cargar AdminLTE.
+
+##### Funciones
+
+| Función | Criterio WCAG | Descripción |
+|---------|---------------|-------------|
+| Enlaces para saltar contenido | 2.4.1 Evitar bloques | Añade enlaces «Saltar al contenido principal» y «Saltar a la navegación». |
+| Gestión del foco | 2.4.3 y 2.4.7 | Devuelve el foco del modal al elemento que lo abrió y gestiona Escape. |
+| Navegación con teclado | 2.1.1 Teclado | Permite navegar por los menús con las flechas y usar Enter/Espacio en botones personalizados. |
+| Movimiento reducido | 2.3.3 Animación | Respeta `prefers-reduced-motion` al desactivar las animaciones. |
+| Anuncios en vivo | 4.1.3 Estado de mensajes | Anuncia errores y mensajes de éxito a los lectores de pantalla. |
+| Identificación de errores | 3.3.1 y 3.3.2 | Etiqueta automáticamente los campos sin etiqueta y anuncia errores de validación. |
+| Accesibilidad de tablas | 1.3.1 Información y relaciones | Añade automáticamente atributos `scope` a los encabezados de tabla. |
+
+##### Configuración
+
+El módulo se inicializa en `adminlte.ts` con todas las funciones habilitadas de forma predeterminada:
+
+```js
+initAccessibility({
+  announcements: true,
+  skipLinks: true,
+  focusManagement: true,
+  keyboardNavigation: true,
+  reducedMotion: true
+})
+```
+
+Establece cualquier opción en `false` para desactivar la función correspondiente.
+
+##### API pública
+
+```js
+import { initAccessibility } from 'admin-lte'
+
+const a11y = initAccessibility()
+
+// Anunciar un mensaje a los lectores de pantalla
+a11y.announce('Elemento guardado correctamente', 'polite')
+a11y.announce('El formulario contiene errores', 'assertive')
+
+// Enfocar un elemento específico
+a11y.focusElement('#my-input')
+
+// Mantener el foco dentro de un contenedor (útil para modales o diálogos personalizados)
+a11y.trapFocus(document.querySelector('.my-dialog'))
+
+// Añadir regiones semánticas a la página
+a11y.addLandmarks()
+```
+
+##### Funciones de utilidad
+
+```js
+import { accessibilityUtils } from 'admin-lte'
+
+// Comprobar la relación de contraste de color (WCAG 1.4.3)
+const result = accessibilityUtils.checkColorContrast('rgb(0,0,0)', 'rgb(255,255,255)')
+// { ratio: 21, passes: true }
+
+// Comprobar si un elemento puede recibir el foco
+accessibilityUtils.isFocusable(element)
+
+// Generar un ID único para atributos ARIA
+accessibilityUtils.generateId('modal') // "modal-x7k2m9p4q"
+```
+
+##### Clases CSS
+
+| Clase | Descripción |
+|-------|-------------|
+| `skip-links` | Contenedor de enlaces para saltar secciones. |
+| `skip-link` | Enlace individual, visible solo cuando recibe el foco. |
+| `reduce-motion` | Se añade a `<body>` cuando el usuario prefiere movimiento reducido. |
+| `sr-only` | Contenido para lectores de pantalla (oculto visualmente). |
+| `live-region` | Región activa de ARIA para anuncios dinámicos. |
+
+##### Notas
+
+- El módulo se integra con los eventos de modales y menús desplegables de Bootstrap para gestionar el foco.
+- Bootstrap gestiona Escape en los modales para respetar `keyboard: false` y los modales apilados.
+- Los anuncios de validación funcionan automáticamente en cualquier campo que tenga atributos de validación HTML5.

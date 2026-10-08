@@ -1,0 +1,53 @@
+El complemento FullScreen activa y desactiva el modo de pantalla completa nativo del navegador.
+
+##### Uso
+
+Este complemento se activa mediante atributos de datos.
+
+**Data API**
+
+Añade `data-lte-toggle="fullscreen"` a un botón. Usa `data-lte-icon="maximize"` y `data-lte-icon="minimize"` en los iconos secundarios para alternar su visibilidad.
+
+```html
+<button type="button" class="btn" data-lte-toggle="fullscreen">
+  <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+  <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+</button>
+```
+
+##### Eventos
+
+| Evento | Descripción |
+|-------|-------------|
+| `maximized.lte.fullscreen` | Se emite al entrar en el modo de pantalla completa. |
+| `minimized.lte.fullscreen` | Se emite al salir del modo de pantalla completa. |
+
+##### API programática
+
+```js
+import { FullScreen } from "admin-lte"
+
+const btn = document.querySelector('[data-lte-toggle="fullscreen"]')
+const fs = new FullScreen(btn)
+
+fs.toggleFullScreen()  // entrar o salir según el estado actual
+fs.inFullScreen()      // solicitar pantalla completa
+fs.outFullScreen()     // salir del modo de pantalla completa
+```
+
+###### Métodos
+
+| Method | Returns | Description |
+|---|---|---|
+| `toggleFullScreen()` | `void` | Llama a `inFullScreen()` si no está en pantalla completa; de lo contrario, llama a `outFullScreen()`. Primero comprueba `document.fullscreenEnabled`. |
+| `inFullScreen()` | `void` | Llama a `document.documentElement.requestFullscreen()`. El cambio del icono `.d-none` y el evento `maximized.lte.fullscreen` dependen del evento `fullscreenchange`; si se rechaza la solicitud, la interfaz no cambia. |
+| `outFullScreen()` | `void` | Llama a `document.exitFullscreen()`. El cambio del icono `.d-none` y el evento `minimized.lte.fullscreen` dependen del evento `fullscreenchange`. |
+
+El constructor no recibe configuración; solo debes pasarle el elemento de activación.
+
+##### Notas
+
+- El navegador debe ser compatible con la [API Fullscreen](https://developer.mozilla.org/docs/Web/API/Fullscreen_API). Comprueba `document.fullscreenEnabled` antes de solicitarla.
+- El estado del icono y los eventos se sincronizan mediante el evento nativo `fullscreenchange`. Así se mantienen actualizados si el usuario sale del modo con <kbd>ESC</kbd> o <kbd>F11</kbd>; si el navegador rechaza una solicitud, los iconos no cambian.
+- El icono de maximizar se oculta con la clase de utilidad `d-none` de Bootstrap (no con `display` en línea), para no sobrescribir el valor de visualización propio de la biblioteca de iconos. Esto funciona con FontAwesome, Lucide, Tabler Icons, entre otras.
+- Solicitar pantalla completa en `document.documentElement` (es decir, `<html>`) hace que toda la página ocupe la pantalla. Para mostrar solo una tarjeta a pantalla completa, usa el [método `maximize()` de CardWidget](card-widget.html#programmatic-api).

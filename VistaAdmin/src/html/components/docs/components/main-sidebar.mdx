@@ -1,0 +1,129 @@
+La barra lateral que aparece a la izquierda de esta página es un ejemplo de cómo puede verse la tuya. Estructura de una barra lateral:
+
+```html
+<!--inicio::Sidebar-->
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+  <!--inicio::Marca de Sidebar-->
+  <div class="sidebar-brand">
+    <!--inicio::Enlace de marca-->
+    <a href="./index.html" class="brand-link">
+      <!--inicio::Imagen de marca-->
+      <img
+        src="./assets/img/AdminLTELogo.png"
+        alt="Logotipo de AdminLTE"
+        class="brand-image opacity-75 shadow"
+      />
+      <!--fin::Imagen de marca-->
+      <!--inicio::Texto de marca-->
+      <span class="brand-text fw-light">AdminLTE 4</span>
+      <!--fin::Texto de marca-->
+    </a>
+    <!--fin::Enlace de marca-->
+  </div>
+  <!--fin::Marca de Sidebar-->
+  <!--inicio::Contenedor de Sidebar-->
+  <div class="sidebar-wrapper">
+    <nav class="mt-2">
+      <!--inicio::Menú de Sidebar-->
+      <ul
+        class="nav sidebar-menu flex-column"
+        data-lte-toggle="treeview"
+        role="menu"
+        data-accordion="false"
+      >
+        <li class="nav-header">Encabezado de navegación</li>
+        <li class="nav-item">
+          <a href="./index.html" class="nav-link">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>Nivel 1</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>
+              Vista de árbol
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="./index.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>
+                  Nivel 2 (Badge)
+                  <span
+                    class="nav-badge badge text-bg-secondary me-3"
+                  >
+                    6
+                  </span>
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="./index.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Nivel 2</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="./index.html" class="nav-link active">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>Nivel 1 activo</p>
+          </a>
+        </li>
+
+        <li class="nav-item menu-open">
+          <a href="#" class="nav-link active">
+            <i class="nav-icon bi bi-circle-fill"></i>
+            <p>
+              Vista de árbol Menu Abrir
+              <i class="nav-arrow bi bi-chevron-right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="./index.html" class="nav-link active">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Nivel 2 activo</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="./index.html" class="nav-link">
+                <i class="nav-icon bi bi-circle"></i>
+                <p>Nivel 2</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <!--fin::Menú de Sidebar-->
+    </nav>
+  </div>
+  <!--fin::Contenedor de Sidebar-->
+</aside>
+<!--fin::Sidebar-->
+```
+
+## Logotipo alternativo
+
+Puedes usar dos imágenes de logotipo en lugar de un logotipo con texto; solo tienes que cambiar el marcado por este:
+
+```html
+<div class="sidebar-brand">
+  <a href="./index.html" class="brand-link logo-switch">
+    <img
+      src="./assets/img/AdminLTELogo.png"
+      alt="Logotipo pequeño de AdminLTE"
+      class="brand-image-xl logo-xs opacity-75 shadow"
+    />
+    <img
+      src="./assets/img/AdminLTEFullLogo.png"
+      alt="Logotipo de AdminLTE Large"
+      class="brand-image-xs logo-xl opacity-75"
+    />
+  </a>
+</div>
+```

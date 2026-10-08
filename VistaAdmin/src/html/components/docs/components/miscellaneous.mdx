@@ -1,0 +1,191 @@
+Los componentes de esta página son los que AdminLTE agrega a Bootstrap, además del encabezado, la barra lateral y la [tarjeta](card.html). Todos usan solo CSS, salvo que se indique lo contrario.
+
+##### Avisos
+
+Bloque de nota con borde y tono según el color de tema. Se usa en toda esta documentación.
+
+```html
+<div class="callout callout-info">
+  <h5 class="fw-bold">Atención</h5>
+  <p>Texto del cuerpo. <a href="#" class="callout-link">Un enlace</a>.</p>
+</div>
+```
+
+| Clase | Descripción |
+|---|---|
+| `.callout` | Bloque base: relleno y borde izquierdo de `.25rem`. |
+| `.callout-{color}` | Una variante por cada entrada de `$theme-colors`. Define el fondo, el borde y el color de énfasis del texto. |
+| `.callout-link` | Resalta en negrita un enlace dentro del aviso. Los enlaces comunes y `<code>` ya usan el color de énfasis de la variante para seguir siendo legibles sobre el fondo sutil. |
+
+Los callouts consecutivos eliminan el espacio entre sí, de modo que el conjunto se percibe como un solo bloque.
+
+##### Cintas
+
+Cinta diagonal fijada a la esquina superior de un elemento posicionado. Consulta la [demostración de cintas](../../UI/ribbons.html).
+
+```html
+<div class="card">
+  <div class="ribbon-wrapper">
+    <div class="ribbon text-bg-primary">Nuevo</div>
+  </div>
+  <div class="card-body">…</div>
+</div>
+```
+
+| Clase | Descripción |
+|---|---|
+| `.ribbon-wrapper` | Contenedor cuadrado que recorta la cinta. Debe estar dentro de un elemento posicionado: `.card` ya lo está; cualquier otro necesita `.position-relative`. |
+| `.ribbon` | La cinta. El color se define con una utilidad `.text-bg-*`. |
+| `.ribbon-wrapper.ribbon-lg` | Esquina más grande y texto de `1rem`. |
+| `.ribbon-wrapper.ribbon-xl` | Esquina más grande y texto de `1.25rem`. |
+
+El ancho de la cinta se calcula a partir de `--lte-ribbon-size`; al sobrescribir esa propiedad, se escala todo el componente:
+
+```css
+.ribbon-wrapper.ribbon-custom {
+  --lte-ribbon-size: 90px;
+  --lte-ribbon-width: 130px;
+}
+```
+
+Usa etiquetas cortas. El banner se recorta en la esquina cuadrada, por lo que solo se ven aproximadamente `64px` a su tamaño predeterminado, unas seis letras. `.ribbon-lg` y `.ribbon-xl` ofrecen más espacio. En RTL, tanto la esquina como la rotación se reflejan sin necesidad de marcado adicional.
+
+##### Cuadro pequeño
+
+Bloque grande de estadísticas con color de fondo, icono de marca de agua y enlace al pie.
+
+```html
+<div class="small-box text-bg-primary">
+  <div class="inner">
+    <h3>150</h3>
+    <p>Pedidos nuevos</p>
+  </div>
+  <svg class="small-box-icon" aria-hidden="true">…</svg>
+  <a href="#" class="small-box-footer link-light">Más información <i class="bi bi-link-45deg"></i></a>
+</div>
+```
+
+| Clase | Descripción |
+|---|---|
+| `.small-box` | El bloque. Combínalo con una utilidad `.text-bg-*` para asignar el color. |
+| `.inner` | Contiene la cifra y su etiqueta. |
+| `.small-box-icon` | Icono grande a modo de marca de agua, alineado al borde final. Agrega `aria-hidden="true"`. |
+| `.small-box-footer` | Enlace que ocupa todo el ancho del pie. |
+
+##### Cuadro informativo
+
+Fila compacta de estadísticas con icono, etiqueta, cifra y una barra de progreso opcional.
+
+```html
+<div class="info-box">
+  <span class="info-box-icon text-bg-primary shadow-sm">
+    <i class="bi bi-gear-fill"></i>
+  </span>
+  <div class="info-box-content">
+    <span class="info-box-text">Tráfico de CPU</span>
+    <span class="info-box-number">10 <small>%</small></span>
+    <div class="progress">
+      <div class="progress-bar" style="width: 70%"></div>
+    </div>
+    <span class="progress-description">Aumento del 70 % en 30 días</span>
+  </div>
+</div>
+```
+
+| Clase | Descripción |
+|---|---|
+| `.info-box` | La fila. |
+| `.info-box-icon` | Área cuadrada del icono. Asígnale color con `.text-bg-*`. |
+| `.info-box-content` | Columna de texto. |
+| `.info-box-text` | Etiqueta. Truncates rather than wrapping. |
+| `.info-box-number` | La cifra. |
+| `.info-box-more` | Enlace opcional al final de la fila. |
+| `.progress-description` | Texto debajo de una barra de progreso integrada. |
+
+##### Cronología
+
+Lista vertical de actividades con fecha.
+
+```html
+<div class="timeline">
+  <div class="time-label"><span class="text-bg-danger">10 Feb. 2026</span></div>
+  <div>
+    <i class="timeline-icon bi bi-envelope text-bg-primary"></i>
+    <div class="timeline-item">
+      <span class="time"><i class="bi bi-clock-fill"></i> 12:05</span>
+      <h3 class="timeline-header"><a href="#">Soporte del equipo</a> te envió un correo</h3>
+      <div class="timeline-body">…</div>
+      <div class="timeline-footer"><a class="btn btn-primary btn-sm">Leer más</a></div>
+    </div>
+  </div>
+</div>
+```
+
+| Clase | Descripción |
+|---|---|
+| `.timeline` | Contenedor que dibuja la línea vertical. |
+| `.time-label` | Marca de fecha que interrumpe la línea. |
+| `.timeline-icon` | Punto sobre la línea. Asígnale color con `.text-bg-*`. |
+| `.timeline-item` | Panel de la entrada. |
+| `.time` | Marca de tiempo al final del panel. |
+| `.timeline-header` / `.timeline-body` / `.timeline-footer` | Las tres secciones del panel. El cuerpo y el pie son opcionales. |
+| `.timeline-inverse` | Variante plana: sin sombra y con un borde sencillo. |
+
+Cada elemento consta de un `<div>` que contiene el icono y el contenido; el contenedor no tiene clase.
+
+##### Widgets sociales y publicaciones
+
+Tarjetas de perfil y bloques de actividad. Consulta la [demostración de widgets sociales](../../widgets/social.html). Conservan los nombres de clase de v3 para que el marcado migrado siga funcionando, pero usan grid y flex en lugar de elementos flotantes y toman los colores de las utilidades de Bootstrap.
+
+```html
+<div class="user-block">
+  <img class="rounded-circle" src="user.jpg" alt="">
+  <span class="username"><a href="#">Jonathan Burke Jr.</a></span>
+  <span class="description">Compartido públicamente · hoy a las 19:30</span>
+</div>
+```
+
+| Clase | Descripción |
+|---|---|
+| `.user-block` | Avatar, nombre y metadatos en un marcado simple. El avatar ocupa las dos filas de texto, así que no se necesita un contenedor adicional. `.comment` es opcional y aparece en una tercera fila. |
+| `.user-block.user-block-sm` | Avatar y texto más pequeños, para hilos de comentarios. |
+| `.post` | Entrada de una secuencia. Se separa de la siguiente; la última no muestra separador ni espacio inferior. |
+| `.description-block` | Cifra centrada con un rótulo en mayúsculas: `.description-header` y `.description-text`. Se puede repetir en las columnas del pie de una tarjeta. |
+| `.widget-user` | Tarjeta de perfil con encabezado tipo banner y un avatar que se superpone al límite entre encabezado y pie. Requiere `.widget-user-header`, `.widget-user-image`, `.widget-user-username` y `.widget-user-desc`. |
+| `.widget-user-2` | Variante más compacta, con el avatar dentro del encabezado para permitir que los nombres largos ocupen varias líneas. |
+
+Para `.widget-user`, la altura del encabezado y el tamaño del avatar son variables Sass (`$lte-widget-user-header-height`, `$lte-widget-user-image-size`); el espaciado superior del pie de página se calcula a partir de ellas; al cambiar un valor, la superposición se mantiene correcta.
+
+##### Barras de progreso
+
+Tamaños adicionales para `.progress`.
+
+| Clase | Altura |
+|---|---|
+| `.progress-sm` | `10px` |
+| `.progress-xs` | `7px` |
+| `.progress-xxs` | `3px` |
+
+`.progress.vertical` coloca la barra en vertical y `.progress-group` combina una barra con una fila de etiqueta.
+
+##### Notificaciones emergentes
+
+`.toast-{color}` aplica a una notificación de Bootstrap cada color de `$theme-colors`: encabezado de color, cuerpo sutil y borde a juego. El botón de cierre cambia automáticamente a la variante blanca si el encabezado es oscuro, en ambos modos de color.
+
+```html
+<div class="toast toast-success" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header">
+    <strong class="me-auto">Guardado</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+  </div>
+  <div class="toast-body">Se guardaron los cambios.</div>
+</div>
+```
+
+##### Tamaños de imagen
+
+`.img-size-32`, `.img-size-50` y `.img-size-64` establecen el ancho en píxeles y mantienen la altura automática. Sirven para avatares en menús desplegables y listas, donde una utilidad de tamaño de Bootstrap requeriría dos clases.
+
+##### Chat directo
+
+El panel de chat tiene su propia página; consulta el [complemento DirectChat](../javascript/direct-chat.html) para ver su marcado y cómo controlar el panel de contactos.

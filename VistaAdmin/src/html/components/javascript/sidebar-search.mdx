@@ -1,0 +1,89 @@
+SidebarSearch filtra el menú de la barra lateral mientras escribes. Mantiene visibles las coincidencias y oculta las demás; además, expande los submenús que contienen resultados para que puedan verse. Al borrar el campo, restaura el menú tal como estaba, incluidos los submenús que estaban abiertos.
+
+El campo de búsqueda de la barra lateral de esta página es una demostración funcional.
+
+##### Uso
+
+Este complemento se activa mediante atributos de datos.
+
+**Data API**
+
+Añade `data-lte-toggle="sidebar-search"` a un campo de texto. Colócalo fuera de `.sidebar-wrapper` para que permanezca fijo mientras el menú se desplaza debajo.
+
+```html
+<div class="sidebar-search" role="search">
+  <label for="sidebar-search-input" class="visually-hidden">Filtrar menú</label>
+  <input
+    type="search"
+    id="sidebar-search-input"
+    class="form-control form-control-sm"
+    placeholder="Filtrar menú…"
+    autocomplete="off"
+    data-lte-toggle="sidebar-search"
+    data-lte-target="#navigation"
+  >
+  <p class="fs-7 text-secondary mt-2 mb-0" data-lte-search-empty role="status" hidden>
+    No hay páginas coincidentes.
+  </p>
+</div>
+```
+
+| Atributo | Descripción |
+|---|---|
+| `data-lte-toggle="sidebar-search"` | Marca el campo como filtro del menú. |
+| `data-lte-target` | Selector del menú que se va a filtrar. Es opcional; si se omite, se usa `.sidebar-menu` dentro del `.app-sidebar` que contiene el campo. |
+| `data-lte-search-empty` | Elemento opcional que se muestra cuando la búsqueda no encuentra coincidencias. Asígnale `role="status"` para que se anuncie el resultado. |
+
+Conviene usar `type="search"`: el botón de borrar integrado del navegador emite el evento `input` y restaura el menú automáticamente. <kbd>ESC</kbd> en el campo hace lo mismo.
+
+##### Reglas de coincidencia
+
+- La búsqueda no distingue mayúsculas de minúsculas y coincide con cualquier parte del texto de `.nav-link`, no solo con el principio.
+- Un elemento principal permanece visible si coincide alguno de sus descendientes y se expande para mostrarlo.
+- Si coincide el nombre del elemento principal, se conserva todo su subárbol; por eso, al expandirlo siempre se muestran elementos.
+- Las etiquetas de sección `.nav-header` se ocultan durante el filtrado, porque los grupos que describen dejan de estar completos.
+
+##### Eventos
+
+| Evento | Descripción |
+|-------|-------------|
+| `filtered.lte.sidebar-search` | Se emite en el campo después de cada filtrado. `event.detail` contiene `{ query, matches }`; `matches` vale `-1` cuando se borra el filtro. |
+
+```js
+document.addEventListener("filtered.lte.sidebar-search", event => {
+  console.log(event.detail.query, event.detail.matches)
+})
+```
+
+##### API programática
+
+```js
+import { SidebarSearch } from "admin-lte"
+
+const input = document.querySelector('[data-lte-toggle="sidebar-search"]')
+const search = SidebarSearch.getOrCreateInstance(input)
+
+search.search("layout")  // filter the menu
+search.clear()           // restore it
+search.dispose()         // restore, then drop the instance
+```
+
+###### Métodos
+
+| Método | Devuelve | Descripción |
+|---|---|---|
+| `search(term)` | `void` | Filtra el menú para mostrar las entradas que coinciden con `term`. Si el término está vacío o solo contiene espacios, llama a `clear()`. |
+| `clear()` | `void` | Muestra todas las entradas y restaura el estado de apertura que tenía cada submenú antes de la búsqueda. |
+| `dispose()` | `void` | Borra el filtro y elimina la instancia del registro. |
+| `SidebarSearch.getInstance(el)` | `SidebarSearch \| null` | Instancia existente para un elemento, si la hay. |
+| `SidebarSearch.getOrCreateInstance(el)` | `SidebarSearch` | Instancia existente o una nueva. |
+
+El constructor no recibe configuración; el menú de destino se obtiene de `data-lte-target`.
+
+##### Notas
+
+- Las entradas se ocultan mediante el atributo `hidden`, no una clase, así que desaparecen tanto del árbol de accesibilidad como del diseño. No necesitas adaptar CSS al filtro.
+- Antes de la primera tecla, el complemento guarda el estado de apertura de cada submenú y su valor `display` en línea. Ambos importan: [Treeview](treeview.html) establece `display` en línea al deslizar un menú; después de una búsqueda, ese valor tendría prioridad sobre `.menu-open > .nav-treeview`.
+- Como la búsqueda modifica `.menu-open`, no controles esos mismos submenús desde tu código mientras haya un filtro activo; primero bórralo.
+- En la barra lateral compacta se oculta el campo porque un campo de texto no se muestra correctamente en ese espacio. Al pasar el cursor, reaparece junto con las etiquetas que filtra.
+- Ambos controladores están delegados en `document`, así que una barra lateral que se renderice después de la carga —por ejemplo, en un Turbo Frame o mediante un enrutador del cliente— no necesita inicialización adicional.

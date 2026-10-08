@@ -1,0 +1,56 @@
+El complemento Layout gestiona las transiciones CSS durante los cambios de diseño e indica cuándo termina de cargar la aplicación.
+
+##### Comportamiento
+
+El complemento Layout realiza automáticamente dos tareas principales:
+
+1. **Mantener las transiciones en pausa:** durante el cambio de tamaño de la ventana, se desactivan temporalmente las transiciones CSS de la barra lateral, la barra de navegación y el área de contenido para evitar defectos visuales. Mientras tanto, se añade la clase `hold-transition` a `<body>`.
+
+2. **Señal de aplicación cargada:** 400 ms después de `DOMContentLoaded`, se añade la clase `app-loaded` a `<body>`. Usa esta clase en CSS para aplazar las animaciones hasta que la aplicación esté lista y evitar parpadeos durante la carga inicial.
+
+##### Clases CSS
+
+| Clase | Descripción |
+|-------|-------------|
+| `hold-transition` | Desactiva temporalmente las transiciones CSS de los elementos del diseño. Se aplica al cambiar el tamaño de la ventana. |
+| `app-loaded` | Se añade a `<body>` cuando termina de prepararse el diseño inicial. Se puede usar para las animaciones de entrada. |
+
+##### Uso en CSS
+
+```css
+/* Ocultar las transiciones de la barra lateral hasta que cargue la aplicación */
+body:not(.app-loaded) .app-sidebar {
+  transition: none !important;
+}
+
+/* Animar solo después de que cargue la aplicación */
+body.app-loaded .app-sidebar {
+  transition: width 0.3s ease;
+}
+```
+
+##### API programática
+
+El complemento Layout se inicializa por sí solo en `DOMContentLoaded`; no hace falta configurarlo manualmente. Expone un único método público para casos avanzados en los que quieras suprimir transiciones alrededor de tus propias modificaciones del DOM:
+
+```js
+import { Layout } from "admin-lte"
+
+const layout = new Layout(document.body)
+layout.holdTransition(200)   // desactivar las transiciones durante 200 ms
+
+// ... realizar una acción que de otro modo produciría una animación no deseada
+document.body.classList.toggle("sidebar-mini")
+```
+
+###### Métodos
+
+| Método | Devuelve | Descripción |
+|---|---|---|
+| `holdTransition(time?)` | `void` | Añade `hold-transition` a `<body>` y la elimina después de `time` milisegundos (100 de forma predeterminada). Se usa para suprimir transiciones CSS durante los cambios de diseño desde el código. |
+
+##### Notas
+
+- La clase `hold-transition` se elimina automáticamente al terminar el plazo; no hace falta limpiarla.
+- No hay atributos de datos: el complemento no lee configuración y se inicializa con el elemento body al cargar la página.
+- Para detectar cuándo terminan las animaciones de carga inicial, observa la clase `app-loaded` en `<body>` o escucha el evento estándar `load`.

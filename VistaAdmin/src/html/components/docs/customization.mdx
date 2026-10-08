@@ -1,0 +1,181 @@
+AdminLTE hereda el modelo de temas mediante propiedades personalizadas CSS de Bootstrap 5.3 y agrega su propia capa de variables SCSS. Puedes personalizar el aspecto de dos maneras:
+
+1. **CSS custom properties** — rápido, sin compilación y compatible con el CSS ya generado.
+2. **SCSS variables** — requiere compilación, pero permite cambiar cualquier aspecto, incluidos los puntos de interrupción de la cuadrícula y el ancho de la barra lateral.
+
+##### Ajustes rápidos con variables CSS
+
+Bootstrap y AdminLTE exponen decenas de propiedades personalizadas CSS en `:root`. Sobrescríbelas en tu propia hoja de estilos para cambiar el tema sin volver a compilar:
+
+```css
+:root,
+[data-bs-theme="light"] {
+  --bs-primary: #6610f2;        /* swap Bootstrap's blue for purple */
+  --bs-primary-rgb: 102, 16, 242;
+  --bs-body-bg: #f3f4f6;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #14171c;        /* más oscuro que el valor predeterminado de Bootstrap */
+  --bs-body-color: #e9ecef;
+}
+```
+
+Los componentes basados en `var(--bs-primary)` (la mayor parte de la interfaz de AdminLTE) adoptan el cambio automáticamente.
+
+###### Variables comunes que conviene conocer
+
+| Variable | Predeterminado | Qué controla |
+|---|---|---|
+| `--bs-primary` | `#0d6efd` | Color de marca; se usa en elementos activos de la barra lateral y botones principales |
+| `--bs-body-bg` | `#fff` (light) / `#212529` (dark) | Fondo de la página |
+| `--bs-body-color` | `#212529` | Color de texto predeterminado |
+| `--bs-border-color` | `#dee2e6` | Todos los bordes finos |
+| `--bs-border-radius` | `.375rem` | Radio predeterminado para tarjetas, botones y campos |
+| `--bs-border-radius-lg` | `.5rem` | Radio mayor, usado en los modales |
+| `--bs-font-sans-serif` | `system-ui, ...` | Pila de fuentes predeterminada |
+
+Consulta la lista completa en [variables CSS de Bootstrap](https://getbootstrap.com/docs/5.3/customize/css-variables/).
+
+¿Necesitas más de los ocho colores de tema de Bootstrap — una barra lateral azul marino, una fila de widgets verde azulado o el azul de marca como color `.text-bg-brand`? Para eso sirve la opción [paleta extendida](colors.html) : incluye doce colores diseñados y una variable Sass de una línea (`$lte-palette-custom`) para agregar colores propios, en una hoja independiente que no afecta al proyecto si no la cargas.
+
+##### Variables SCSS
+
+Si compilas desde el código fuente (clonaste el repositorio o lo instalaste con npm y tu propio empaquetador), edita [`src/scss/_variables.scss`](https://github.com/ColorlibHQ/AdminLTE/blob/master/src/scss/_variables.scss) y vuelve a compilar.
+
+Las variables que se suelen sobrescribir con sus valores predeterminados:
+
+```scss
+// Sidebar
+$lte-sidebar-width:          250px;       // collapse to mini at ~70px
+$lte-sidebar-breakpoint:     lg;          // punto de interrupción en el que la barra lateral comienza fuera del lienzo
+$lte-sidebar-padding-x:      .5rem;
+$lte-sidebar-padding-y:      .5rem;
+
+// Sidebar colours (light theme)
+$lte-sidebar-color:          $gray-800;
+$lte-sidebar-hover-bg:       rgba($black, .1);
+$lte-sidebar-active-color:   $black;
+$lte-sidebar-menu-active-bg: rgba($black, .1);
+
+// Header
+$lte-app-header-height:      $nav-link-height + ($lte-app-header-link-padding-y * 2);
+$lte-app-header-bottom-border-color: var(--#{$prefix}border-color);
+
+// Transitions
+$lte-transition-speed:       .3s;
+$lte-transition-fn:          ease-in-out;
+```
+
+AdminLTE modifica alrededor de diez valores predeterminados de Bootstrap en [`src/scss/_bootstrap-overrides.scss`](https://github.com/ColorlibHQ/AdminLTE/blob/master/src/scss/_bootstrap-overrides.scss); las demás variables de Bootstrap (colores de botones, escala de espaciado y puntos de interrupción) conservan sus valores originales. Todos los valores usan `!default`; sobrescríbelos en tu propio archivo SCSS *antes* de la importación:
+
+```scss
+// my-theme.scss
+
+// 1. Primero, tus propias sobrescrituras
+$primary:                #6610f2;
+$lte-sidebar-width:      280px;
+$border-radius:          .25rem;
+
+// 2. Luego, importa AdminLTE (que importa Bootstrap)
+@import "node_modules/admin-lte/src/scss/adminlte";
+```
+
+> **Nota:** para compilar Sass debes tener instalado `bootstrap`, que desde la versión 4.1 es una dependencia de pares de `admin-lte` (npm también lo instala automáticamente). Asegúrate de que el compilador Sass pueda resolver las importaciones `bootstrap/...` agregando `node_modules` a las rutas de búsqueda. Por ejemplo, usa `sass --load-path=node_modules` o, en Vite:
+> `css: { preprocessorOptions: { scss: { loadPaths: ["node_modules"] } } }`.
+
+> `bootstrap/...` agregando `node_modules` a las rutas de búsqueda, por ejemplo:
+> `sass --load-path=node_modules` or, in Vite,
+> `css: { preprocessorOptions: { scss: { loadPaths: ["node_modules"] } } }`.
+
+##### Volver a compilar SCSS
+
+Si clonaste el repositorio, el proceso de compilación ya está configurado:
+
+```bash
+npm install
+npm run css           # one-off build → dist/css/
+npm run watch-css-main  # rebuild on save during development
+```
+
+Si tu proyecto usa AdminLTE como dependencia, configura el empaquetador para que use `node_modules/admin-lte/src/scss/adminlte.scss`. Ejemplos:
+
+```js
+// Vite / Rollup / Webpack
+import "admin-lte/src/scss/adminlte.scss"
+```
+
+##### Personalizar la marca de la barra lateral
+
+El elemento `.sidebar-brand` acepta texto, una imagen o ambos. Ejemplo de marcado:
+
+```html
+<div class="sidebar-brand">
+  <a href="/" class="brand-link">
+    <img src="/assets/logo.svg" alt="Logo" class="brand-image opacity-75 shadow" />
+    <span class="brand-text fw-light">Mi panel</span>
+  </a>
+</div>
+```
+
+Para cambiar el logotipo cuando la barra lateral se contrae a su estado mini, AdminLTE incluye un patrón integrado; consulta la demostración de [Cambio de logotipo](../layout/logo-switch.html) para ver el marcado.
+
+##### Personalizar el modo oscuro
+
+AdminLTE sigue el sistema de atributos `data-bs-theme` de Bootstrap 5.3. Para personalizar los colores del modo oscuro, limita las variables a `[data-bs-theme="dark"]`:
+
+```css
+[data-bs-theme="dark"] {
+  --bs-primary: #4dabf7;          /* lighter primary for dark backgrounds */
+  --lte-sidebar-color: #e9ecef;
+  --lte-sidebar-active-color: #fff;
+}
+```
+
+El [Modo de color](color-mode.html) explica el marcado del selector y el JavaScript que cambia el atributo.
+
+##### Esquema de colores personalizado para la barra lateral
+
+AdminLTE incluye la barra lateral configurada para el modo claro, pero las demostraciones aplican `data-bs-theme="dark"` a `.app-sidebar` para mostrarla oscura sobre una página clara. Puedes combinar las opciones:
+
+```html
+<!-- Página clara y barra lateral oscura (patrón de la demostración) -->
+<body class="bg-body-tertiary">
+  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    ...
+  </aside>
+</body>
+```
+
+```html
+<!-- Página clara y barra lateral clara -->
+<body class="bg-body-tertiary">
+  <aside class="app-sidebar bg-body shadow border-end">
+    ...
+  </aside>
+</body>
+```
+
+##### Modo compacto
+
+Agrega `.compact-mode` a `.app-wrapper` (o a cualquier elemento superior en el árbol DOM) para reducir el espaciado de todo el diseño, útil en paneles con muchos datos. Las dimensiones del modo compacto se definen con las variables `*-compact` de `_variables.scss`.
+
+```html
+<div class="app-wrapper compact-mode">
+  <!-- encabezado, barra lateral y contenido principal con menos espaciado -->
+</div>
+```
+
+##### Cuándo volver a compilar y cuándo sobrescribir en tiempo de ejecución
+
+| Personalización | CSS variables | SCSS rebuild |
+|---|---|---|
+| Colores de marca | ✅ | ✅ |
+| Cuerpo / text colours | ✅ | ✅ |
+| Border radius | ✅ | ✅ |
+| Ancho de la barra lateral | ❌ (not a CSS var) | ✅ |
+| Cambios en los puntos de interrupción | ❌ | ✅ |
+| Escala de espaciado | ❌ | ✅ |
+| Tamaños de fuente | partial | ✅ (full control) |
+
+Siempre que puedas, usa variables CSS: seguirán funcionando al actualizar AdminLTE y evitarán conflictos de combinación. Reserva las sobrescrituras SCSS para cambios estructurales (ancho de la barra lateral, puntos de interrupción) que las variables CSS no cubran.

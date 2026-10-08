@@ -1,0 +1,122 @@
+---
+import Head from "@components/_head.astro"
+import Footer from "@components/dashboard/_footer.astro"
+import Topbar from "@components/dashboard/_topbar.astro"
+import Sidenav from "@components/dashboard/_sidenav.astro"
+import Scripts from "@components/_scripts.astro"
+
+const title = "Diseño | AdminLTE 4"
+const path = "../../../dist"
+const mainPage = "docs"
+const page = "layout";
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <!--begin::Head-->
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <!--end::Head-->
+  <!--begin::Cuerpo-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary docs-page">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h1 class="mb-0 fs-3">Diseño</h1>
+              </div>
+              <div class="col-sm-6">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">Documentación</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Diseño
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        <!--begin::App Content-->
+        <div class="app-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="callout callout-info mb-4">
+                      <h5 class="fw-bold">Consejos</h5>
+                      <p>
+                        El <a href="https://github.com/ColorlibHQ/AdminLTE/tree/master/dist" target="_blank" rel="noopener noreferrer" class="callout-link">
+                          páginas de inicio
+                        </a> son un buen punto de partida para crear tu aplicación desde cero.
+                      </p>
+                    </div>
+
+                    <p>El diseño consta de cinco partes principales:</p>
+                    <ul>
+                      <li>
+                        Contenedor <code>.app-wrapper</code> &mdash; elemento que envuelve todo el sitio.
+                      </li>
+                      <li>
+                        Encabezado principal <code>.app-header</code> &mdash; contiene el logotipo y la barra de navegación.
+                      </li>
+                      <li>
+                        Barra lateral principal <code>.app-sidebar</code> &mdash; contiene el panel de usuario y el menú lateral.
+                      </li>
+                      <li>
+                        Contenido <code>.app-main</code> &mdash; contiene el encabezado y el contenido de la página.
+                      </li>
+                      <li>
+                        Pie de página principal <code>.app-footer</code> &mdash; contiene el pie de página.
+                      </li>
+                    </ul>
+
+                    <h4>Opciones de diseño</h4>
+                    <p>
+                      AdminLTE v4 ofrece varias opciones para el diseño principal. Puedes agregar cualquiera de estas clases a la etiqueta
+                      <code>body</code> para obtener el resultado deseado.
+                    </p>
+                    <ul>
+                      <li>
+                        Barra lateral fija: usa la clase <code>.layout-fixed</code> para fijar la barra lateral.
+                      </li>
+                      <li>
+                        Barra lateral compacta al alternar: usa las clases <code>.sidebar-expand-* .sidebar-mini</code> para que la barra lateral aparezca contraída al cargar la página.
+                      </li>
+                      <li>
+                        Barra lateral contraída: usa la clase <code>.sidebar-expand-* .sidebar-mini .sidebar-collapse</code> para que la barra lateral aparezca contraída al cargar la página.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.container-fluid -->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+      <Footer />
+    </div>
+    <!--end::App Wrapper-->
+    <!--begin::Script-->
+    <Scripts path={path} />
+    <!--end::Script-->
+  </body><!--end::Cuerpo-->
+</html>

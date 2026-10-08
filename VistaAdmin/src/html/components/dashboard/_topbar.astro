@@ -1,0 +1,393 @@
+---
+import { convertPathToHtml } from "../../../utils/index.js"
+
+// Smart path resolution: calculate relative path based on directory depth
+const pathname = Astro.url.pathname;
+const pathSegments = pathname.split('/').filter(segment => segment !== '');
+const depth = pathSegments.length > 0 ? pathSegments.length - 1 : 0;
+const deploymentPath = depth === 0 ? './' : '../'.repeat(depth);
+
+// Cross-link between demo and docs experiences.
+const { path } = Astro.props
+const htmlPath = path ? convertPathToHtml(path) : ""
+const isDocsPage = pathname.includes("/docs/")
+---
+
+<!--begin::Header-->
+<nav class="app-header navbar navbar-expand bg-body">
+  <!--begin::Container-->
+  <div class="container-fluid">
+    <!--begin::Start Navbar Links-->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          data-lte-toggle="sidebar"
+          href="#"
+          role="button"
+          aria-label="Toggle sidebar"
+        >
+          <i class="bi bi-list"></i>
+        </a>
+      </li>
+      {isDocsPage ?
+        <>
+          <li class="nav-item d-none d-md-block">
+            <a href={htmlPath + "/docs/introduction.html"} class="nav-link">
+              <i class="bi bi-book me-1" aria-hidden="true" />
+              Documentación
+            </a>
+          </li>
+          <li class="nav-item d-none d-md-block">
+            <a href={htmlPath + "/index.html"} class="nav-link">
+              <i class="bi bi-arrow-left me-1" aria-hidden="true" />
+              Volver a la vista previa
+            </a>
+          </li>
+        </> :
+        <>
+          <li class="nav-item d-none d-md-block">
+            <a href={htmlPath + "/index.html"} class="nav-link">
+              <i class="bi bi-grid-1x2 me-1" aria-hidden="true" />
+              Vista previa
+            </a>
+          </li>
+          <li class="nav-item d-none d-md-block">
+            <a href={htmlPath + "/docs/introduction.html"} class="nav-link">
+              <i class="bi bi-book me-1" aria-hidden="true" />
+              Documentación
+            </a>
+          </li>
+        </>}
+    </ul>
+    <!--end::Start Navbar Links-->
+
+    <!--begin::Navbar Buscar-->
+    <form
+      class="navbar-search d-none d-md-block ms-3"
+      role="search"
+      action={htmlPath + "/pages/search-results.html"}
+    >
+      <label for="navbar-search-input" class="visually-hidden">Buscar</label>
+      <div class="navbar-search-field">
+        <input
+          type="search"
+          id="navbar-search-input"
+          name="q"
+          class="form-control"
+          placeholder="Buscar…"
+          autocomplete="off"
+        />
+        <button
+          class="navbar-search-submit"
+          type="submit"
+            aria-label="Enviar búsqueda"
+        >
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+    <!--end::Navbar Buscar-->
+
+    <!--begin::End Navbar Links-->
+    <ul class="navbar-nav ms-auto">
+      <!--begin::Buscar (pantallas pequeñas: el campo anterior se oculta, así que enlaza a la página de búsqueda)-->
+      <li class="nav-item d-md-none">
+        <a
+          class="nav-link"
+          href={htmlPath + "/pages/search-results.html"}
+          aria-label="Buscar"
+        >
+          <i class="bi bi-search" aria-hidden="true"></i>
+        </a>
+      </li>
+      <!--end::Buscar-->
+      <!--begin::Mensajes Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link"
+          data-bs-toggle="dropdown"
+          href="#"
+          aria-label="Mensajes: 3 sin leer"
+        >
+          <i class="bi bi-chat-text"></i>
+          <span class="navbar-badge badge text-bg-danger">3</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img
+                  src={deploymentPath + "assets/img/user1-128x128.jpg"}
+                  alt=""
+                  class="img-size-50 rounded-circle me-3"
+                />
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Brad Diesel
+                  <span class="float-end fs-7 text-danger"
+                  ><i class="bi bi-star-fill"></i></span
+                  >
+                </p>
+                <p class="fs-7">Llámame cuando puedas...</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img
+                  src={deploymentPath + "assets/img/user8-128x128.jpg"}
+                  alt=""
+                  class="img-size-50 rounded-circle me-3"
+                />
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  John Pierce
+                  <span class="float-end fs-7 text-secondary">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">Ya recibí tu mensaje</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <!--begin::Mensaje-->
+            <div class="d-flex">
+              <div class="flex-shrink-0">
+                <img
+                  src={deploymentPath + "assets/img/user3-128x128.jpg"}
+                  alt=""
+                  class="img-size-50 rounded-circle me-3"
+                />
+              </div>
+              <div class="flex-grow-1">
+                <p class="dropdown-item-title">
+                  Nora Silvester
+                  <span class="float-end fs-7 text-warning">
+                    <i class="bi bi-star-fill"></i>
+                  </span>
+                </p>
+                <p class="fs-7">El asunto va aquí</p>
+                <p class="fs-7 text-secondary">
+                  <i class="bi bi-clock-fill me-1"></i> Hace 4 horas
+                </p>
+              </div>
+            </div>
+            <!--end::Mensaje-->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">Ver todos los mensajes</a>
+        </div>
+      </li>
+      <!--end::Mensajes Dropdown Menu-->
+
+      <!--begin::Notificaciones Dropdown Menu-->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link"
+          data-bs-toggle="dropdown"
+          href="#"
+          aria-label="Notificaciones: 15 unread"
+        >
+          <i class="bi bi-bell-fill"></i>
+          <span class="navbar-badge badge text-bg-warning">15</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-envelope me-2"></i> 4 mensajes nuevos
+            <span class="float-end text-secondary fs-7">hace 3 min</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-people-fill me-2"></i> 8 solicitudes de amistad
+            <span class="float-end text-secondary fs-7">hace 12 h</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="bi bi-file-earmark-fill me-2"></i> 3 informes nuevos
+            <span class="float-end text-secondary fs-7">hace 2 días</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">
+            Ver todas las notificaciones
+          </a>
+        </div>
+      </li>
+      <!--end::Notificaciones Dropdown Menu-->
+
+      <!--begin::Language Menu-->
+      <!-- Markup only: swapping the locale is the application's job. The docs
+           Recetas page shows how to wire this to a real locale switch. -->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link"
+          href="#"
+          id="language-menu"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          aria-label="Cambiar idioma; idioma actual: español"
+        >
+          <i class="bi bi-translate" aria-hidden="true"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="language-menu">
+          <li>
+            <a class="dropdown-item active" href="#" hreflang="es" aria-current="true">
+              Español
+              <i class="bi bi-check-lg ms-2" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="#" hreflang="es">Español</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="fr">Français</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="de">Deutsch</a></li>
+          <li><a class="dropdown-item" href="#" hreflang="ar">العربية</a></li>
+        </ul>
+      </li>
+      <!--end::Language Menu-->
+
+      <!--begin::Alternar pantalla completa-->
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          href="#"
+          data-lte-toggle="fullscreen"
+          aria-label="Alternar pantalla completa"
+        >
+          <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
+          <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
+        </a>
+      </li>
+      <!--end::Alternar pantalla completa-->
+
+      <!--begin::Selector de modo de color (#6010)-->
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link"
+          href="#"
+          id="bd-theme"
+          aria-label="Alternar esquema de color"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="bi bi-sun-fill" data-lte-theme-icon="light"></i>
+          <i class="bi bi-moon-fill d-none" data-lte-theme-icon="dark"></i>
+          <i class="bi bi-circle-half d-none" data-lte-theme-icon="auto"></i>
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="bd-theme"
+          style="--bs-dropdown-min-width: 8rem;"
+        >
+          <li>
+            <button
+              type="button"
+              class="dropdown-item d-flex align-items-center"
+              data-bs-theme-value="light"
+              aria-pressed="false"
+            >
+              <i class="bi bi-sun-fill me-2"></i>
+              Claro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="dropdown-item d-flex align-items-center"
+              data-bs-theme-value="dark"
+              aria-pressed="false"
+            >
+              <i class="bi bi-moon-fill me-2"></i>
+              Oscuro
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="dropdown-item d-flex align-items-center active"
+              data-bs-theme-value="auto"
+              aria-pressed="true"
+            >
+              <i class="bi bi-circle-half me-2"></i>
+              Automático
+              <i class="bi bi-check-lg ms-auto d-none"></i>
+            </button>
+          </li>
+        </ul>
+      </li>
+      <!--end::Selector de modo de color-->
+
+      <!--begin::User Menu Dropdown-->
+      <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+          <img
+            src={deploymentPath + "assets/img/user2-160x160.jpg"}
+            class="user-image rounded-circle shadow"
+            alt="Alexander Pierce"
+          />
+          <span class="d-none d-md-inline">Alexander Pierce</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+          <!--begin::User Image-->
+          <li class="user-header text-bg-primary">
+            <img
+              src={deploymentPath + "assets/img/user2-160x160.jpg"}
+              class="rounded-circle shadow"
+              alt="Alexander Pierce"
+            />
+            <p>
+              Alexander Pierce - Desarrollador web
+              <small>Miembro desde nov. de 2023</small>
+            </p>
+          </li>
+          <!--end::User Image-->
+          <!--begin::Menu Cuerpo-->
+          <li class="user-body">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-4 text-center">
+                <a href="#">Seguidores</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Ventas</a>
+              </div>
+              <div class="col-4 text-center">
+                <a href="#">Amigos</a>
+              </div>
+            </div>
+            <!--end::Row-->
+          </li>
+          <!--end::Menu Cuerpo-->
+          <!--begin::Menú del pie de página-->
+          <li class="user-footer">
+            <a href="#" class="btn btn-outline-secondary">Perfil</a>
+            <a href="#" class="btn btn-outline-danger float-end">Cerrar sesión</a>
+          </li>
+          <!--end::Menú del pie de página-->
+        </ul>
+      </li>
+      <!--end::User Menu Dropdown-->
+    </ul>
+    <!--end::End Navbar Links-->
+  </div>
+  <!--end::Container-->
+</nav>
+<!--end::Header-->

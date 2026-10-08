@@ -1,0 +1,419 @@
+import PaletteWheel from "./_palette-wheel.astro"
+import SkinPreview from "../_skin-preview.astro"
+import { palette, paletteV3, sets, skinGroups, skinGroupsV3, skins, skinsV3 } from "../../../utils/palette.mjs"
+
+AdminLTE 4 utiliza los colores de tema de Bootstrap 5.3 — `primary`, `success`, `danger`, `warning`, `info`, `secondary`, `light`, `dark` — y nada más. Esto mantiene `adminlte.css` ligero, pero un panel suele necesitar más de cinco tonos en una fila de widgets y quienes usaban AdminLTE 3 pueden echar de menos `.bg-navy`, `.bg-teal` y los temas de la barra lateral.
+
+**`dist/css/adminlte-colors.css`** es la solución y su uso es opcional: una hoja de estilos adicional (≈ 8 kB comprimida con gzip) que agrega catorce colores como tokens `--bs-*`, además de todas las familias de clases que Bootstrap genera para sus colores de tema. También permite que cualquiera [se convierta en tu color `primary`](#making-one-of-them-your-primary). Los proyectos que no la cargan no cambian. Si prefieres conservar los colores originales de AdminLTE 3, consulta [Dos paletas](#two-palettes).
+
+<div class="d-flex flex-wrap gap-2 my-3">
+  {palette.map(c => (
+    <span class={`badge text-bg-${c.name} fs-6 fw-normal`}>{c.name}</span>
+  ))}
+</div>
+
+Prueba todos los colores, temas y widgets en la <a href="../UI/colors.html">demostración de Colores</a>; también incluye un comprobador de colores de marca.
+
+##### Cargar la hoja de estilos
+
+Cárgala **después** de `adminlte.css`. Solo agrega clases; no sobrescribe ninguna regla existente de esa hoja de estilos.
+
+```html
+<link rel="stylesheet" href="css/adminlte.css" />
+<link rel="stylesheet" href="css/adminlte-colors.css" />
+```
+
+Desde el CDN (fija la versión exacta que probaste en producción):
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.9.1/dist/css/adminlte-colors.min.css" />
+```
+
+Desde npm, usando un empaquetador:
+
+```js
+import "admin-lte/dist/css/adminlte.min.css"
+import "admin-lte/dist/css/adminlte-colors.min.css"
+```
+
+También puedes compilarla: el punto de entrada de Sass es `src/scss/adminlte-colors.scss`; también sirve para agregar colores propios (más abajo). Se genera una versión RTL (`adminlte-colors.rtl.css`) para mantener la paridad con el resto del CSS. La hoja no incluye reglas que dependan de la dirección, por lo que ambas versiones funcionan en cualquiera de ellas.
+
+##### Dos paletas
+
+Puedes elegir los colores **diseñados para la versión 4.4** (los predeterminados de esta página) o los **originales de AdminLTE 3**, sin cambios. Se distribuyen en dos archivos que definen los mismos nombres de clase con valores distintos; carga **solo uno** después de `adminlte.css`:
+
+| Archivo | Contenido | Regla de color del texto |
+|---|---|---|
+| `dist/css/adminlte-colors.css` | 14 colores diseñados en OKLCH: naranja, ámbar, oliva, verde azulado, celeste, índigo, violeta, fucsia, rosa, azul marino, acero, pizarra, grafito y medianoche. Todos admiten texto blanco y complementan los colores de tema de Bootstrap. | `color-contrast()` de Bootstrap 5, 4.5:1 |
+| `dist/css/adminlte-colors-v3.css` | Los 18 colores de AdminLTE 3: lightblue, navy, olive, lime, fuchsia, maroon, blue, indigo, purple, pink, red, orange, yellow, green, teal, cyan, gray y gray-dark, con los valores de la versión 3.2. | Regla de AdminLTE 3 (YIQ de Bootstrap 4): texto blanco en lightblue, olive, teal y cyan; texto oscuro en lime, orange y yellow. Ocho colores no alcanzan WCAG AA; [[`data-lte-contrast="aa"`](#making-the-v3-colours-pass-aa) permite invertirlos. |
+
+Ambas generan exactamente las mismas familias de clases (`.bg-*`, `.text-bg-*`, `.text-*`, `.border-*`, `.link-*`, `.bg-gradient-*`, `.card-*`, `.callout-*`, `.direct-chat-*`, tokens con variantes para el modo oscuro), así que todo lo explicado aquí se aplica a cualquiera. En las páginas de demostración puedes alternar entre ellas: la <a href="../UI/colors.html">demostración de Colores</a> y <a href="../generate/theme.html">Personalizador de temas</a> incluyen un selector de paleta.
+
+```html
+<!-- paleta diseñada -->
+<link rel="stylesheet" href="css/adminlte-colors.css" />
+<!-- o los colores originales de AdminLTE 3, no ambos -->
+<link rel="stylesheet" href="css/adminlte-colors-v3.css" />
+```
+
+Estos son los colores originales de AdminLTE 3 y la relación de contraste del texto blanco para cada uno. Varios no alcanzan el mínimo WCAG AA de 4.5:1 para texto normal, como ocurría en v3; conservarlos implica mantener esos valores:
+
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Hexadecimal</th>
+        <th scope="col">Texto (regla de v3)</th>
+        <th scope="col">Texto blanco</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {paletteV3.map(c => (
+        <tr>
+          <td class="text-nowrap">
+            <span class="badge me-2" style={`background:${c.hex}`}>&nbsp;&nbsp;&nbsp;</span>
+            <code>{c.name}</code>
+          </td>
+          <td><code>{c.hex}</code></td>
+          <td>{c.textColor === "white" ? "white" : "dark (#1f2d3d)"}</td>
+          <td class="text-nowrap">{c.contrastWhite.toFixed(1)}:1{c.textColor === "white" && c.contrastWhite < 4.5 ? " ⚠︎" : ""}</td>
+          <td class="text-body-secondary">{c.note}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+##### Cómo hacer que los colores de la v3 cumplan AA
+
+**`data-lte-contrast="aa"` corrige los ocho casos sin cambiar ningún valor.** La regla de v3 asigna texto blanco a ocho colores que no alcanzan el mínimo WCAG AA de 4.5:1 para texto normal. El atributo cambia solo esos textos por un color que sí cumple y deja intactos todos los fondos:
+
+```html
+<html lang="es" data-lte-contrast="aa">
+```
+
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Color</th>
+        <th scope="col">Predeterminado (regla de v3)</th>
+        <th scope="col">Con <code>aa</code></th>
+      </tr>
+    </thead>
+    <tbody>
+      {paletteV3.filter(c => c.textColor !== c.textColorAA).map(c => (
+        <tr>
+          <td class="text-nowrap"><span class="badge me-2" style={`background:${c.hex}`}>&nbsp;&nbsp;&nbsp;</span><code>{c.name}</code> <span class="text-body-secondary">{c.hex}</span></td>
+          <td class="text-nowrap">texto blanco — <span class="text-danger-emphasis fw-semibold">{c.contrastWhite.toFixed(2)}:1</span></td>
+          <td class="text-nowrap">texto negro — <span class="text-success-emphasis fw-semibold">{c.contrastBlack.toFixed(2)}:1</span></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+Se muestran las relaciones en vez de las combinaciones que fallan, para no incluir texto que tampoco superaría la comprobación. Activa el selector de la <a href="../UI/colors.html">demostración de Colores</a> para compararlas en componentes reales. La opción cubre todos los casos en que la paleta aplica texto sobre su propio color: `.text-bg-*`, `.bg-gradient-*`, encabezados `.card-*`, `.direct-chat-*` y el texto de botones, insignias y etiquetas que genera `data-lte-primary`. Hay tres aspectos que conviene conocer:
+
+- **Debe ser negro.** El tono oscuro de AdminLTE 3, `#1f2d3d`, solo alcanza 4.5:1 en dos de los ocho colores: `teal` y `cyan`. Los demás necesitan negro puro, que es el que usa `aa`. Los colores que ya llevan texto oscuro (`lime`, `orange`, `yellow`) conservan `#1f2d3d` sin cambios.
+- **Combina un color invertido con `data-bs-theme="light"`.** Si una barra lateral o un encabezado usa uno de esos ocho colores, ahora tendrá texto oscuro; los enlaces de navegación también deberían usarlo: `<nav class="app-header navbar navbar-expand text-bg-lightblue" data-bs-theme="light">`. Al activar el selector, las páginas de demostración hacen esto automáticamente.
+- **`.text-lightblue` y `.link-lightblue` son otro caso.** Aplican el color al texto sobre el fondo de la página, donde esos mismos ocho tonos también tienen poco contraste. Usa en su lugar el token de énfasis: las variantes equivalentes a `.text-lightblue-emphasis` provienen de `--bs-lightblue-text-emphasis`, un tono oscurecido un 60 % y legible sobre un fondo claro.
+
+El atributo funciona con cualquiera de las dos hojas. En la paleta diseñada no genera CSS, porque todos sus colores cumplen AA con texto blanco; puedes dejarlo en el marcado sin coste ([#6110](https://github.com/ColorlibHQ/AdminLTE/issues/6110)).
+
+La hoja de estilos de v3 se construye con el mismo Sass que la paleta diseñada: `src/scss/adminlte-colors-v3.scss` asigna el mapa de v3 a `$lte-palette` y define `$lte-palette-contrast: "yiq"`. Por eso, `$lte-palette-custom`, `$lte-palette-aliases` y las opciones siguientes también se aplican allí. Sus estilos preestablecidos de barra lateral vienen de AdminLTE 2: un encabezado de color sobre la barra lateral oscura de v3 (`text-bg-gray-dark`, el fondo exacto de `sidebar-dark-*`) o sobre una barra blanca:
+
+<div class="table-responsive" tabindex="0">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Estilo</th>
+        <th scope="col">Encabezado</th>
+        <th scope="col">Barra lateral</th>
+        <th scope="col">Color principal</th>
+        <th scope="col">nombre en v2/v3</th>
+      </tr>
+    </thead>
+    <tbody>
+      {skinsV3.map(s => (
+        <tr>
+          <td class="text-nowrap fw-semibold">{s.name}</td>
+          <td class="text-nowrap"><code>{s.header.cls}</code> · <code>{s.header.theme}</code></td>
+          <td class="text-nowrap"><code>{s.sidebar.cls}</code> · <code>{s.sidebar.theme}</code></td>
+          <td class="text-nowrap"><code>{s.primary}</code></td>
+          <td class="text-body-secondary">{s.note}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+##### La paleta
+
+Nueve colores cromáticos y cinco tonos neutros para la interfaz. Todos admiten texto **blanco** con un contraste de al menos 4.5:1, así que `.text-bg-*`, las cajas pequeñas, insignias y barras laterales de color se leen de forma uniforme, sin tener que decidir para cada color si conviene usar texto oscuro.
+
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Hexadecimal</th>
+        <th scope="col">OKLCH</th>
+        <th scope="col">Texto blanco</th>
+        <th scope="col">Carácter y uso</th>
+      </tr>
+    </thead>
+    <tbody>
+      {palette.map(c => (
+        <tr>
+          <td class="text-nowrap">
+            <span class={`badge text-bg-${c.name} me-2`}>&nbsp;&nbsp;&nbsp;</span>
+            <code>{c.name}</code>
+          </td>
+          <td><code>{c.hex}</code></td>
+          <td class="text-nowrap"><small class="font-monospace">{c.oklchLabel}</small></td>
+          <td class="text-nowrap">{c.contrastWhite.toFixed(1)}:1</td>
+          <td><span class="text-body-emphasis">{c.description}</span> <span class="text-body-secondary">{c.use}</span></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+Los colores se nombran por su tono, no según los nombres del mapa `$colors` (`blue`, `purple`, `red`, etc.). Estos se superponen con los colores de tema y se omiten deliberadamente; las variables `--bs-blue`, `--bs-purple`, etc. que define Bootstrap siguen disponibles si necesitas sus valores originales.
+
+##### Qué incluye
+
+Para cada color `<name>` la hoja genera las mismas variantes que Bootstrap para los colores del tema, por lo que los modificadores de opacidad y el modo oscuro funcionan como esperas:
+
+| Incluye | Ejemplo | Notas |
+|---|---|---|
+| Tokens | `--bs-teal`, `--bs-teal-rgb` | También incluye `--bs-teal-bg-subtle`, `--bs-teal-border-subtle` y `--bs-teal-text-emphasis` en ambos modos de color |
+| Fondo | `.bg-teal`, `.bg-teal.bg-opacity-25` | Usa la misma estructura de variables que `.bg-primary` |
+| Fondo y texto con contraste | `.text-bg-teal` | Texto blanco; es lo que usan los widgets |
+| Degradado | `.bg-gradient-teal` | Clase de AdminLTE 3; también se genera para los 8 colores de tema (`.bg-gradient-primary` …). La combinación `.bg-teal.bg-gradient` de Bootstrap produce el mismo resultado |
+| Texto, borde y enlace | `.text-teal`, `.border-teal`, `.link-teal` | Se combina con `.text-opacity-*`, `.border-opacity-*` y `.link-underline-*` |
+| Tarjetas | `.card-teal`, `.card-outline.card-teal`, `.card.text-bg-teal` | Usa las mismas variables `--lte-card-variant-*` que las tarjetas con colores de tema |
+| Avisos | `.callout-teal` | Fondo sutil y texto destacado; cambia en el modo oscuro |
+| Chat directo | `.direct-chat-teal` | |
+| Widgets | `.small-box.text-bg-teal`, `.info-box.text-bg-teal`, `.badge.text-bg-teal`, `.progress-bar.bg-teal` | Ya toman el color de `.text-bg-*` o `.bg-*`, por lo que no se genera nada adicional |
+| Botones | `.btn.text-bg-teal`, `.btn.bg-gradient-teal` | Obtienen tonos para los estados hover y activo |
+
+##### Usar uno de estos colores como `primary`
+
+Bootstrap compila `$primary` dentro de sus componentes: `.btn-primary` incluye `--bs-btn-bg: #0d6efd` y no `var(--bs-primary)`. Por eso, sobrescribir el token cambia `.text-primary` y `.bg-primary`, pero deja azules los botones, la paginación y las casillas. Esto explica por qué antes algunos temas solo se aplicaban en parte ([#6107](https://github.com/ColorlibHQ/AdminLTE/issues/6107)).
+
+Ambas hojas de colores conectan esos componentes con variables y permiten asignarles un color de la paleta mediante un atributo:
+
+```html
+<html lang="es" data-lte-primary="teal">
+```
+
+Sin el atributo nada cambia. También se puede aplicar en cualquier contenedor, de modo que una sección de la página puede tener su propio color principal. Estos son los elementos que siguen ese color:
+
+| Elemento | Detalles |
+|---|---|
+| Botones | `.btn-primary`, `.btn-outline-primary` (los tonos de los estados hover, activo y deshabilitado coinciden con los de Bootstrap), `.btn-link` |
+| Enlaces | `a`, `.link-primary`, `.btn-link` y enlaces de paginación; en modo oscuro usan el tono de Bootstrap |
+| Utilidades y tokens | `--bs-primary`, `--bs-primary-rgb`, los tres tokens sutiles y de énfasis, `.text-primary`, `.bg-primary`, `.border-primary`, `.text-bg-primary`, `.alert-primary`, `.list-group-item-primary`, `.accordion` |
+| Formularios | Anillo y borde de foco en `.form-control` y `.form-select`, `.form-check-input:checked`, casillas indeterminadas y controles de `.form-range` |
+| Componentes | `.nav-pills .nav-link.active`, `.pagination .active`, `.progress-bar`, `.list-group-item.active`, `.dropdown-item.active`, `--bs-focus-ring-color` |
+| AdminLTE | `.card-primary` (y `.card-outline`), `.direct-chat-primary`, `.toast-primary`, `.small-box` y `.info-box` con `.bg-primary` |
+
+También funcionan los colores de tema propios de Bootstrap — `data-lte-primary="danger"` no necesita un color de la paleta. Dos elementos conservan deliberadamente el azul de Bootstrap: `.table-primary`: los tonos de filas alternas y el estado hover, y el control del interruptor, que se dibuja como un data URI al activarlo.
+
+Si el color de marca no está en la paleta, define el token manualmente y conserva el atributo:
+
+```css
+[data-lte-primary="brand"] {
+  --bs-primary: #7a5af8;
+  --bs-primary-rgb: 122, 90, 248;
+  /* opcional: si no se define, el tono hover se calcula con color-mix() */
+  --lte-primary-hover: #6849e6;
+  --lte-primary-active: #5b3fd1;
+  /* dark text on a light brand colour */
+  --lte-primary-color: #fff;
+}
+```
+
+Con Sass basta una línea — `$lte-palette-custom: ("brand": #7a5af8)` (consulta [Cómo agregar colores de marca](#adding-your-brand-colours)) — y `data-lte-primary="brand"` se genera automáticamente con tonos y texto de contraste incluidos.
+
+Elige un color que admita texto blanco: en Bootstrap, la marca de verificación de una casilla activa es blanca y no se puede cambiar mediante CSS. Todos los colores de la paleta diseñada cumplen este requisito; en la paleta v3, `lime`, `yellow` y `orange` no lo cumplen.
+
+##### Estilos de color para la barra lateral y el encabezado
+
+En AdminLTE 4, un «estilo de color» no es una clase propia: se compone de una utilidad de fondo y el atributo `data-bs-theme` en la barra lateral y el encabezado. `data-bs-theme="dark"` aplica texto claro a los enlaces y al nombre de la aplicación; `"light"` aplica texto oscuro. Como todos los colores de la paleta admiten texto blanco, una barra lateral o un encabezado de color siempre se combina con `dark`:
+
+```html
+<!-- header -->
+<nav class="app-header navbar navbar-expand text-bg-sky" data-bs-theme="dark">…</nav>
+
+<!-- sidebar -->
+<aside class="app-sidebar text-bg-navy shadow" data-bs-theme="dark">…</aside>
+```
+
+Cada ajuste preestablecido también indica el `data-lte-primary` que le corresponde, para que los botones combinen con la interfaz. Los paneles de administración suelen ofrecer cuatro familias de estilos, y estos ajustes siguen esa organización. Cada miniatura muestra el aspecto real en pequeño: barra lateral, encabezado y dos colores de acento. La <a href="../UI/colors.html">demostración de Colores</a> aplica cualquier ajuste con un clic; el <a href="../generate/theme.html">Personalizador de temas</a> hace lo mismo y permite combinar libremente la barra lateral, la barra de navegación y el pie de página (sus selectores muestran la «Paleta extendida»).
+
+{skinGroups.map(group => (
+  <div class="mb-4">
+    <h6 class="fw-semibold mb-1">{group.name}</h6>
+    <p class="text-body-secondary mb-2">{group.note}</p>
+    <div class="table-responsive" tabindex="0">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col" class="text-nowrap" style="width: 1%">Vista previa</th>
+            <th scope="col">Estilo</th>
+            <th scope="col">Encabezado</th>
+            <th scope="col">Barra lateral</th>
+            <th scope="col">Color principal</th>
+            <th scope="col">Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {skins.filter(s => s.group === group.name).map(s => (
+            <tr>
+              <td><SkinPreview skin={s} size="sm" /></td>
+              <td class="text-nowrap fw-semibold">{s.name}</td>
+              <td class="text-nowrap"><code>{s.header.cls}</code> · <code>{s.header.theme}</code></td>
+              <td class="text-nowrap"><code>{s.sidebar.cls}</code> · <code>{s.sidebar.theme}</code></td>
+              <td class="text-nowrap"><code>{s.primary}</code></td>
+              <td>{s.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+))}
+
+`bg-body`, `bg-body-secondary` y `bg-body-tertiary` son utilidades de superficie de Bootstrap: siguen el atributo `data-bs-theme` del elemento. Por eso, «Predeterminado» muestra una barra lateral oscura. Todas las clases `text-bg-*` y `bg-gradient-*` requieren `adminlte-colors.css`.
+
+##### Combinaciones de cuatro colores para una fila de widgets
+
+Las paletas suelen fallar al elegir cuatro colores para una fila de cajas pequeñas. Estos grupos se seleccionaron según la relación entre tonos; puedes usarlos tal cual o como punto de partida.
+
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Combinación</th>
+        <th scope="col">Clases</th>
+        <th scope="col">Por qué funciona</th>
+      </tr>
+    </thead>
+    <tbody>
+      {sets.map(s => (
+        <tr>
+          <td class="text-nowrap fw-semibold">{s.name}</td>
+          <td class="text-nowrap">{s.colors.map(c => <span class={`badge text-bg-${c} me-1`}>{c}</span>)}</td>
+          <td>{s.why}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+##### Cómo agregar colores de marca
+
+**Con Sass** (recomendado): define `$lte-palette-custom` antes de importar el punto de entrada. Tu color recibirá todos los tokens, utilidades y compatibilidad con componentes de los colores incluidos. Si reutilizas un nombre, reemplazarás el valor incluido.
+
+```scss
+// tu-archivo-adminlte.scss
+$lte-palette-custom: (
+  "brand": #0f766e,      // color nuevo → .bg-brand, .text-bg-brand, .card-brand, …
+  "sky":   #0369a1       // ajusta un color incluido al tono de azul que prefieras
+);
+@import "admin-lte/src/scss/adminlte-colors";
+```
+
+Esto también genera `data-lte-primary="brand"`; así, `<html data-lte-primary="brand">` aplica tu color de marca a los componentes `primary` de Bootstrap, con tonos hover y texto de contraste adecuados.
+
+Para incluir **solo** tus colores (y quitar los catorce incluidos), define `$lte-palette` directamente:
+
+```scss
+$lte-palette: (
+  "brand": #0f766e,
+  "brand-dark": #134e4a,
+  "brand-warm": #b45309
+);
+@import "admin-lte/src/scss/adminlte-colors";
+```
+
+Otras dos opciones:
+
+- `$lte-palette-aliases` — nombres adicionales que generan las mismas clases que una entrada existente. Los proyectos de AdminLTE 3 pueden recuperar sus nombres de clase anteriores: `("lightblue": "sky", "maroon": "pink")`.
+- `$lte-palette-min-contrast-ratio` — contraste mínimo que exige `color-contrast()` de Bootstrap al elegir automáticamente el color del texto para `.text-bg-*`, `.bg-gradient-*` y los encabezados `.card-*`. El valor predeterminado es `4.5` (WCAG AA para texto normal). Si un color personalizado no alcanza ese valor con texto blanco, el texto cambia a negro; `3` es otra opción válida (WCAG AA para texto grande y componentes de interfaz).
+- `$lte-palette-contrast` — `"wcag"` (predeterminado) o `"yiq"`, la regla de luminosidad de Bootstrap 4 y AdminLTE 3 (`$lte-palette-yiq-threshold: 150`, texto oscuro `#1f2d3d`). La hoja v3 usa `"yiq"`; selecciona ese valor si quieres que una paleta personalizada elija los colores de texto como lo hacía la versión 3.
+
+**Elegir un color de marca adecuado.** Lo importante es que el texto blanco alcance una relación de contraste de 4,5:1. Así `.text-bg-brand`, los cuadros pequeños y la barra lateral de marca siguen siendo legibles, y se supera la comprobación de accesibilidad de las páginas de demostración. La mayoría de los azules, verdes y morados de marca cumplen el requisito; los naranjas, amarillos y cianes brillantes no. El <a href="../UI/colors.html#brand-hex">comprobador de la demostración</a> informa la relación, propone una variante del mismo tono oscurecida lo suficiente, avisa si el tono se parece a otro existente e imprime el fragmento Sass.
+
+**Sin Sass**, también puedes definir manualmente un color sobre el CSS compilado. Esta es la estructura completa para un solo nombre:
+
+```css
+:root, [data-bs-theme="light"] {
+  --bs-brand: #0f766e;
+  --bs-brand-rgb: 15, 118, 110;
+  --bs-brand-text-emphasis: #062f2c;
+  --bs-brand-bg-subtle: #cfe4e2;
+  --bs-brand-border-subtle: #9fc8c5;
+}
+[data-bs-theme="dark"] {
+  --bs-brand-text-emphasis: #6fada8;
+  --bs-brand-bg-subtle: #031816;
+  --bs-brand-border-subtle: #094742;
+}
+.bg-brand      { --bs-bg-opacity: 1; background-color: rgba(var(--bs-brand-rgb), var(--bs-bg-opacity)) !important; }
+.text-bg-brand { color: #fff !important; background-color: rgba(var(--bs-brand-rgb), var(--bs-bg-opacity, 1)) !important; }
+.text-brand    { --bs-text-opacity: 1; color: rgba(var(--bs-brand-rgb), var(--bs-text-opacity)) !important; }
+.border-brand  { --bs-border-opacity: 1; border-color: rgba(var(--bs-brand-rgb), var(--bs-border-opacity)) !important; }
+.card-brand, .bg-brand, .text-bg-brand {
+  --lte-card-variant-bg: #0f766e; --lte-card-variant-bg-rgb: 15, 118, 110;
+  --lte-card-variant-color: #fff; --lte-card-variant-color-rgb: 255, 255, 255;
+}
+```
+
+##### Cómo se diseñó la paleta
+
+Los catorce valores se generan automáticamente, no se eligen a mano. `scripts/palette.mjs` los deriva en **OKLCH** —el espacio de color perceptualmente uniforme que usan Tailwind v4 y Radix para construir sus paletas— a partir de tres reglas:
+
+<div class="row g-4 align-items-start my-2">
+  <div class="col-lg-5">
+    <PaletteWheel />
+    <p class="small text-body-secondary mt-2 mb-0">El ángulo representa el tono y la distancia al centro, la saturación cromática. Los puntos rellenos corresponden a la paleta; los círculos vacíos, a los colores <em>primary · success · danger · warning · info</em> de Bootstrap (secondary aparece sin etiqueta en el centro). Los puntos sin etiqueta cerca del centro son los cinco neutros: navy, steel, slate, graphite y midnight.</p>
+  </div>
+  <div class="col-lg-7">
+    <ol class="mb-0">
+      <li class="mb-3"><strong>Contraste uniforme desde el diseño.</strong> Cada color cromático es el valor más <em>claro</em> de su tono que mantiene una relación de contraste de 4,6:1 con texto blanco. Así, todos quedan en OKLCH L ≈ 0,55–0,59 —con un peso visual similar a primary, success y danger de Bootstrap— y ningún widget destaca en exceso frente a los demás.</li>
+      <li class="mb-3"><strong>Tonos en los espacios disponibles.</strong> Bootstrap ya incluye rojo (21°), amarillo (85°), verde (157°), cian (218°) y azul (260°). Los tonos de esta paleta quedan al menos a 17° de esos colores y a 20° entre sí —orange 42 · amber 67 · olive 126 · teal 190 · sky 237 · indigo 283 · violet 303 · fuchsia 324 · pink 350—, por lo que se pueden combinar con los colores de tema en una misma página.</li>
+      <li class="mb-0"><strong>Saturación limitada y neutros con matiz.</strong> La saturación cromática se limita a 0,20 (similar a primary 0,23 y danger 0,20), para que indigo y violet no opaquen teal y amber, que ya están en el límite de la gama sRGB para esta luminosidad. Los cinco neutros —navy, steel, slate, graphite y midnight— tienen un matiz frío (tono ≈ 255–287°) en lugar de ser grises puros y usan los niveles de luminosidad habituales en las barras laterales de paneles modernos (L ≈ 0,24, 0,30, 0,33, 0,40 y 0,50).</li>
+    </ol>
+  </div>
+</div>
+
+`npm run palette` vuelve a generar el mapa a partir de esos valores; `npm run palette -- --check` (y las pruebas unitarias) comprueba el contraste, la separación entre tonos y la coincidencia entre el mapa Sass y los datos de la demostración.
+
+##### Accesibilidad y modo oscuro
+
+- Todos los colores de la paleta **diseñada** superan una relación de contraste de 4,5:1 con texto blanco (el mínimo es 4,6:1). Por eso `.text-bg-*` no necesita excepciones por color y las páginas de demostración que los usan superan la comprobación de axe.
+- La paleta **v3** es el conjunto histórico: ocho de sus dieciocho colores no alcanzan 4,5:1 con el texto que tenían asignado. `data-lte-contrast="aa"` invierte exactamente esos colores; consulta [Cómo hacer que los colores v3 cumplan AA](#making-the-v3-colours-pass-aa).
+- Las utilidades sólidas (`.bg-*`, `.text-bg-*`) son iguales en ambos modos de color, igual que las de Bootstrap. Los tokens sutiles —y con ellos `.callout-*`— cambian con `data-bs-theme="dark"` mediante el mismo cálculo que Bootstrap aplica a `.alert-*`.
+- En fondos de color, debes elegir por tu cuenta las clases `.text-*` y `.link-*`, igual que con los colores de tema de Bootstrap.
+
+##### Migrar desde AdminLTE 3
+
+Los colores extendidos de la versión 3 eran `lightblue`, `navy`, `olive`, `lime`, `fuchsia` y `maroon`, además de los colores con nombre de Bootstrap 4. Varios no alcanzaban 4:1 con texto blanco. La nueva paleta conserva los nombres útiles (`navy`, `olive`, `fuchsia`) y rediseña los demás:
+
+| AdminLTE 3 | Ahora | |
+|---|---|---|
+| `bg-lightblue` | `text-bg-sky` | Mantiene el tono y permite usar texto blanco |
+| `bg-maroon` | `text-bg-pink` | |
+| `bg-navy` / `bg-olive` / `bg-fuchsia` | Los mismos nombres | Valores rediseñados |
+| `bg-lime` | — | No hay un tono lime que admita texto blanco; usa `text-bg-olive` o `text-bg-warning` de Bootstrap |
+| `bg-purple`, `bg-teal`, `bg-orange`, `bg-indigo` … | `text-bg-violet`, `text-bg-teal`, `text-bg-orange`, `text-bg-indigo` | Consulta la tabla de la paleta |
+| `sidebar-dark-primary`, `navbar-light` … | `text-bg-*` + `data-bs-theme` | Consulta la sección <em>Estilos</em> anterior |
+| `bg-gradient-*` | `bg-gradient-*` | Se conserva para los colores de la paleta y del tema |
+
+Hay dos formas de mantener compatible el marcado existente: carga **`adminlte-colors-v3.css`** para recuperar los nombres y valores originales de la v3 (consulta [Dos paletas](#two-palettes)), o usa la paleta diseñada con esta línea de alias `$lte-palette-aliases: ("lightblue": "sky", "maroon": "pink");`.

@@ -1,0 +1,62 @@
+El complemento DirectChat muestra u oculta el panel de contactos de un widget de chat directo.
+
+##### Uso
+
+Este complemento se activa mediante atributos de datos.
+
+**Data API**
+
+Añade `data-lte-toggle="chat-pane"` a un botón dentro de un contenedor `.direct-chat` para mostrar u ocultar la lista de contactos.
+
+```html
+<div class="card direct-chat">
+  <div class="card-header">
+    <h3 class="card-title">Chat directo</h3>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-lte-toggle="chat-pane" title="Alternar contactos">
+        <i class="bi bi-people-fill"></i>
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="direct-chat-messages">
+        <!-- Aquí van los mensajes del chat -->
+    </div>
+    <div class="direct-chat-contacts">
+        <!-- Aquí va la lista de contactos -->
+    </div>
+  </div>
+</div>
+```
+
+##### Eventos
+
+| Evento | Descripción |
+|-------|-------------|
+| `expanded.lte.direct-chat` | Se emite al abrir el panel de contactos. |
+| `collapsed.lte.direct-chat` | Se emite al cerrar el panel de contactos. |
+
+##### Clases CSS
+
+| Clase | Descripción |
+|-------|-------------|
+| `direct-chat-contacts-open` | Se aplica al contenedor `.direct-chat` cuando el panel de contactos está visible. |
+
+##### API programática
+
+```js
+import { DirectChat } from "admin-lte"
+
+const chat = document.querySelector(".direct-chat")
+const dc = new DirectChat(chat)
+
+dc.toggle()  // mostrar u ocultar el panel de contactos
+```
+
+###### Métodos
+
+| Método | Devuelve | Descripción |
+|---|---|---|
+| `toggle()` | `void` | Alterna la clase `direct-chat-contacts-open` en el contenedor `.direct-chat`. Emite `expanded.lte.direct-chat` o `collapsed.lte.direct-chat`. |
+
+El constructor no recibe un objeto de configuración; solo debes pasarle el elemento `.direct-chat`.

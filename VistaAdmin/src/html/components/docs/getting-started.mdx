@@ -1,0 +1,148 @@
+AdminLTE es una plantilla HTML: no hace falta compilarla para usarla. En esta página crearás un panel funcional en unos diez minutos, sin npm, sin una cadena de compilación y sin tener que aprender Astro.
+
+Si vas a integrar AdminLTE en un proyecto real, consulta [Instalación](introduction.html), donde se explican npm, Redactarr y la compilación desde el código fuente.
+
+##### 1. Copia los fragmentos de CDN
+
+Copia estas etiquetas dentro de `<head>` en un archivo HTML nuevo. Cargan AdminLTE, Bootstrap 5.3, Popper, OverlayScrollbars y Bootstrap Icons desde jsDelivr; no hace falta instalarlos.
+
+```html
+<!-- AdminLTE 4 + Bootstrap 5.3 (CSS) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.9.1/dist/css/adminlte.min.css" />
+```
+
+Agrega estas etiquetas justo antes de `</body>`:
+
+```html
+<!-- Bootstrap + Popper + AdminLTE (JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@4.9.1/dist/js/adminlte.min.js"></script>
+```
+
+##### 2. El diseño mínimo funcional
+
+Esta es la página más sencilla que conserva el aspecto de AdminLTE: tiene un encabezado, una barra lateral plegable y un área de contenido principal. Colócala entre las etiquetas CSS y JavaScript anteriores:
+
+```html
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+  <div class="app-wrapper">
+
+    <!-- Encabezado -->
+    <nav class="app-header navbar navbar-expand bg-body">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+              <i class="bi bi-list"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Barra lateral -->
+    <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+      <div class="sidebar-brand">
+        <a href="#" class="brand-link">
+          <span class="brand-text fw-light">Mi panel</span>
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <nav class="mt-2">
+          <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+            <li class="nav-item">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon bi bi-speedometer"></i>
+                <p>Panel</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-bar-chart"></i>
+                <p>Informes</p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="app-main">
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <h3 class="mb-0">Hola, AdminLTE</h3>
+        </div>
+      </div>
+      <div class="app-content">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-header"><h5 class="card-title">Te damos la bienvenida</h5></div>
+            <div class="card-body">
+              Edita este archivo para empezar a crear tu panel.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</body>
+```
+
+Ábrela en un navegador. El botón de menú de la esquina superior izquierda pliega la barra lateral: es el complemento [PushMenu](javascript/pushmenu.html) de AdminLTE, que funciona automáticamente mediante `data-lte-toggle="sidebar"`.
+
+##### 3. Qué está pasando
+
+Estas cuatro clases se encargan de la estructura principal:
+
+| Clase | Función |
+|---|---|
+| `app-wrapper` | Contenedor raíz de la cuadrícula CSS; define las zonas del encabezado, la barra lateral, el contenido y el pie de página. |
+| `app-header` | Se fija en la parte superior de la ventana cuando `layout-fixed` está en `body`. |
+| `app-sidebar` | Barra lateral plegable. Agrega `sidebar-expand-lg` a `body` para definir el punto de quiebre. |
+| `app-main` | Zona de contenido desplazable; el resto de la página se encuentra aquí. |
+
+La página de [Diseño](layout.html) explica toda la estructura del contenedor y sus opciones adaptables.
+
+##### 4. Agrega un widget de JavaScript funcional
+
+AdminLTE incluye siete complementos de JavaScript. Todos se conectan mediante atributos `data-lte-*`, sin necesidad de escribir JavaScript.
+
+Coloca este código en el área de contenido para probar el complemento de tarjetas. Usa los botones del encabezado de la tarjeta:
+
+```html
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">Tarjeta plegable</h5>
+    <div class="card-tools">
+      <button type="button" class="btn btn-sm btn-tool" data-lte-toggle="card-collapse" aria-label="Plegar tarjeta">
+        <i data-lte-icon="expand" class="bi bi-dash-lg"></i>
+        <i data-lte-icon="collapse" class="bi bi-plus-lg"></i>
+      </button>
+      <button type="button" class="btn btn-sm btn-tool" data-lte-toggle="card-remove" aria-label="Quitar tarjeta">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+  <div class="card-body">
+    Pulsa el icono menos para plegarla y la X para quitarla.
+  </div>
+</div>
+```
+
+##### 5. Próximos pasos
+
+Ya tienes una página funcional de AdminLTE. Ahora puedes:
+
+- **Personalizar su aspecto** → [Personalización y temas](customization.html): cambia colores, fuentes y espaciado mediante variables SCSS o propiedades personalizadas de CSS.
+- **Agregar funciones** → [Complementos de JavaScript](javascript/layout.html): consulta la referencia completa de los siete complementos.
+- **Activar el modo oscuro** → [Modo de color](color-mode.html): alterna entre los modos claro, oscuro y automático.
+- **Adaptar el sentido de lectura** → [Compatibilidad con RTL](rtl.html): configura diseños de derecha a izquierda para árabe, hebreo, persa y otros idiomas.
+- **Agregar widgets** → [Integraciones recomendadas](integrations.html): explora selectores de fecha, selección múltiple, gráficos y editores de texto. AdminLTE mantiene reducida la cantidad de dependencias; aquí se explica qué bibliotecas externas puedes agregar.
+
+Si estás actualizando un proyecto existente de AdminLTE 3, consulta la guía de [Migración desde v3](migration.html) para revisar los cambios incompatibles.
